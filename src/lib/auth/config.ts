@@ -1,17 +1,17 @@
 // ─────────────────────────────────────────────
 //  F3 — NextAuth Configuration
-//  Credentials provider with role-based routing
-//  Supports: admin, trainer, client, basic
+//  Compatible with next-auth v5 beta + Next.js 15
 // ─────────────────────────────────────────────
 
 import type { NextAuthConfig } from 'next-auth';
-import Credentials from 'next-auth/providers/credentials';
-import bcrypt from 'bcryptjs';
-import { connectDB } from '@/lib/db/mongoose';
-import UserModel from '@/lib/db/models/User';
+import Credentials             from 'next-auth/providers/credentials';
+import bcrypt                  from 'bcryptjs';
+import { connectDB }           from '@/lib/db/mongoose';
+import UserModel               from '@/lib/db/models/User';
 import type { UserRole, PlanTier, AccountStatus } from '@/types';
 
 export const authConfig: NextAuthConfig = {
+
   // ── Pages ──────────────────────────────────
   pages: {
     signIn: '/login',
@@ -47,7 +47,6 @@ export const authConfig: NextAuthConfig = {
 
           if (!user) return null;
 
-          // Block suspended or deleted accounts
           if (user.status === 'suspended' || user.status === 'deleted') {
             return null;
           }
@@ -59,7 +58,6 @@ export const authConfig: NextAuthConfig = {
 
           if (!passwordMatch) return null;
 
-          // Return shape must match next-auth User interface
           return {
             id:     user._id.toString(),
             name:   user.name,
@@ -79,7 +77,6 @@ export const authConfig: NextAuthConfig = {
 
   // ── Callbacks ──────────────────────────────
   callbacks: {
-    // Runs when JWT is created or updated
     async jwt({ token, user }) {
       if (user) {
         token.id     = user.id;
@@ -90,7 +87,6 @@ export const authConfig: NextAuthConfig = {
       return token;
     },
 
-    // Runs whenever session is checked
     async session({ session, token }) {
       if (token && session.user) {
         session.user.id     = token.id     as string;
@@ -100,29 +96,8 @@ export const authConfig: NextAuthConfig = {
       }
       return session;
     },
-
-    // Controls which routes are accessible
-    authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn    = !!auth?.user;
-      const role          = auth?.user?.role;
-      const path          = nextUrl.pathname;
-
-      // Public routes — always allow
-      const publicRoutes  = ['/', '/login', '/register'];
-      if (publicRoutes.includes(path)) return true;
-
-      // Must be logged in for everything else
-      if (!isLoggedIn) return false;
-
-      // Role-based route guards
-      if (path.startsWith('/dashboard/admin')   && role !== 'admin')   return false;
-      if (path.startsWith('/dashboard/trainer') && role !== 'trainer' && role !== 'admin') return false;
-      if (path.startsWith('/dashboard/client')  && role !== 'client'  && role !== 'admin') return false;
-
-      // AI API routes — trainers and admin only
-      if (path.startsWith('/api/ai') && role !== 'trainer' && role !== 'admin') return false;
-
-      return true;
-    },
   },
+
+  // ── Trust the host in development ──────────
+  trustHost: true,
 };

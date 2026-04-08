@@ -1,10 +1,16 @@
 // ─────────────────────────────────────────────
-//  F3 — Root Route
-//  Redirects to login
+//  F3 — Auth Layout
+//  Shared wrapper for login + register pages
 // ─────────────────────────────────────────────
 
-import { redirect } from 'next/navigation';
-
-export default function RootPage() {
-  redirect('/login');
+export default function AuthLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <main className="min-h-screen">
+      {children}
+    </main>
+  );
 }
