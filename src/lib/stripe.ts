@@ -1,0 +1,17 @@
+// ─────────────────────────────────────────────
+//  F3 — Stripe Client
+//  Single instance shared across API routes
+// ─────────────────────────────────────────────
+
+import Stripe from 'stripe';
+
+if (!process.env.STRIPE_SECRET_KEY) {
+  throw new Error('STRIPE_SECRET_KEY is not defined in .env.local');
+}
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: '2026-03-25.dahlia',
+  typescript:  true,
+});
+
+export default stripe;

@@ -28,6 +28,7 @@ const navItems = [
   { id: 'calendar', label: 'Calendar',    href: '/dashboard/trainer/calendar'   },
   { id: 'messages', label: 'Messages',    href: '/dashboard/trainer/messages'   },
   { id: 'profile',  label: 'My Profile',  href: '/dashboard/trainer/profile'    },
+  { id: 'billing',  label: 'Billing',     href: '/dashboard/trainer/billing'   },
 ];
 
 export default function TrainerSidebar({
