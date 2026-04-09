@@ -1,10 +1,9 @@
 // ─────────────────────────────────────────────
 //  F3 — Root Layout
-//  Wraps entire app with SessionProvider
 // ─────────────────────────────────────────────
 
-import type { Metadata } from 'next';
-import { SessionProvider } from 'next-auth/react';
+import type { Metadata }  from 'next';
+import Providers          from '@/components/layout/Providers';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -20,9 +19,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body style={{ margin: 0, padding: 0 }}>
-        <SessionProvider>
+        <Providers>
           {children}
-        </SessionProvider>
+        </Providers>
       </body>
     </html>
   );

@@ -1,0 +1,20 @@
+// ─────────────────────────────────────────────
+//  F3 — Client Providers Wrapper
+//  SessionProvider must run on the client
+// ─────────────────────────────────────────────
+
+'use client';
+
+import { SessionProvider } from 'next-auth/react';
+
+export default function Providers({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <SessionProvider>
+      {children}
+    </SessionProvider>
+  );
+}

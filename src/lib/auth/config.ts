@@ -1,32 +1,27 @@
 // ─────────────────────────────────────────────
-//  F3 — NextAuth Configuration
-//  Compatible with next-auth v5 beta + Next.js 15
+//  F3 — NextAuth v4 Configuration
 // ─────────────────────────────────────────────
 
-import type { NextAuthConfig } from 'next-auth';
-import Credentials             from 'next-auth/providers/credentials';
-import bcrypt                  from 'bcryptjs';
-import { connectDB }           from '@/lib/db/mongoose';
-import UserModel               from '@/lib/db/models/User';
-import type { UserRole, PlanTier, AccountStatus } from '@/types';
+import type { NextAuthOptions } from 'next-auth';
+import CredentialsProvider      from 'next-auth/providers/credentials';
+import bcrypt                   from 'bcryptjs';
+import { connectDB }            from '@/lib/db/mongoose';
+import UserModel                from '@/lib/db/models/User';
 
-export const authConfig: NextAuthConfig = {
+export const authOptions: NextAuthOptions = {
 
-  // ── Pages ──────────────────────────────────
   pages: {
     signIn: '/login',
     error:  '/login',
   },
 
-  // ── Session ────────────────────────────────
   session: {
     strategy: 'jwt',
-    maxAge:   60 * 60 * 24 * 7, // 7 days
+    maxAge:   60 * 60 * 24 * 7,
   },
 
-  // ── Providers ──────────────────────────────
   providers: [
-    Credentials({
+    CredentialsProvider({
       name: 'credentials',
       credentials: {
         email:    { label: 'Email',    type: 'email'    },
@@ -42,7 +37,7 @@ export const authConfig: NextAuthConfig = {
           await connectDB();
 
           const user = await UserModel.findOne({
-            email: (credentials.email as string).toLowerCase().trim(),
+            email: credentials.email.toLowerCase().trim(),
           }).lean();
 
           if (!user) return null;
@@ -52,7 +47,7 @@ export const authConfig: NextAuthConfig = {
           }
 
           const passwordMatch = await bcrypt.compare(
-            credentials.password as string,
+            credentials.password,
             user.passwordHash
           );
 
@@ -62,9 +57,9 @@ export const authConfig: NextAuthConfig = {
             id:     user._id.toString(),
             name:   user.name,
             email:  user.email,
-            role:   user.role   as UserRole,
-            tier:   user.tier   as PlanTier | undefined,
-            status: user.status as AccountStatus,
+            role:   user.role,
+            tier:   user.tier,
+            status: user.status,
           };
 
         } catch (error) {
@@ -75,7 +70,6 @@ export const authConfig: NextAuthConfig = {
     }),
   ],
 
-  // ── Callbacks ──────────────────────────────
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
@@ -88,16 +82,15 @@ export const authConfig: NextAuthConfig = {
     },
 
     async session({ session, token }) {
-      if (token && session.user) {
-        session.user.id     = token.id     as string;
-        session.user.role   = token.role   as UserRole;
-        session.user.tier   = token.tier   as PlanTier | undefined;
-        session.user.status = token.status as AccountStatus;
+      if (token) {
+        session.user.id     = token.id;
+        session.user.role   = token.role;
+        session.user.tier   = token.tier;
+        session.user.status = token.status;
       }
       return session;
     },
   },
 
-  // ── Trust the host in development ──────────
-  trustHost: true,
+  secret: process.env.NEXTAUTH_SECRET,
 };

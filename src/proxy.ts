@@ -1,7 +1,5 @@
 // ─────────────────────────────────────────────
-//  F3 — Route Proxy (formerly middleware)
-//  Runs on every request before the page renders
-//  Enforces role-based access at the edge
+//  F3 — Route Proxy
 // ─────────────────────────────────────────────
 
 import { NextResponse }     from 'next/server';
@@ -11,9 +9,18 @@ import { getToken }         from 'next-auth/jwt';
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // ── Public routes — always allow ────────────
-  const publicRoutes = ['/', '/login', '/register', '/forgot-password', '/support'];
-  if (publicRoutes.includes(pathname)) {
+  // ── Always allow through ─────────────────────
+  if (
+    pathname.startsWith('/api/auth')    ||
+    pathname.startsWith('/_next')       ||
+    pathname.startsWith('/favicon')     ||
+    pathname.startsWith('/.well-known') ||
+    pathname === '/'                    ||
+    pathname === '/login'               ||
+    pathname === '/register'            ||
+    pathname === '/forgot-password'     ||
+    pathname === '/support'
+  ) {
     return NextResponse.next();
   }
 
@@ -63,6 +70,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!_next/static|_next/image|favicon\\.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 };
