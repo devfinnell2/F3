@@ -61,7 +61,7 @@ const ClientProfileSchema = new Schema<IClientProfileDocument>(
 );
 
 // ── Indexes ────────────────────────────────────
-ClientProfileSchema.index({ userId:    1 });
+
 ClientProfileSchema.index({ trainerId: 1 });
 
 const ClientProfileModel: Model<IClientProfileDocument> =

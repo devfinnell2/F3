@@ -63,7 +63,7 @@ const UserSchema = new Schema<IUserDocument>(
 );
 
 // ── Indexes ────────────────────────────────────
-UserSchema.index({ email: 1 });
+
 UserSchema.index({ role: 1 });
 UserSchema.index({ trainerId: 1 });
 

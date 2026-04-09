@@ -12,6 +12,7 @@ export async function proxy(request: NextRequest) {
   // ── Always allow through ─────────────────────
   if (
     pathname.startsWith('/api/auth')    ||
+    pathname.startsWith('/api/users')   ||  
     pathname.startsWith('/_next')       ||
     pathname.startsWith('/favicon')     ||
     pathname.startsWith('/.well-known') ||
