@@ -88,7 +88,7 @@ export default function ClientCard({ client }: ClientCardProps) {
       {/* Top row */}
       <div className="flex items-center gap-3 mb-3">
         <div
-          className="w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0"
+          className="w-10 h-10 rounded-full flex items-center justify-center font-bold shrink-0"
           style={{
             background: 'rgba(0,255,200,.09)',
             border:     '1px solid rgba(0,255,200,.28)',
@@ -120,7 +120,7 @@ export default function ClientCard({ client }: ClientCardProps) {
           </div>
         </div>
 
-        <div className="text-right flex-shrink-0">
+        <div className="text-right shrink-0">
           <div className="font-bold" style={{ color: '#00ffc8', fontSize: '15px' }}>
             LVL {client.currentLevel}
           </div>

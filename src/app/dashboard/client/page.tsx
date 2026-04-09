@@ -144,7 +144,7 @@ export default async function ClientDashboard() {
           <div className="flex items-center gap-4 mb-4">
             {/* Level circle */}
             <div
-              className="w-16 h-16 rounded-full flex items-center justify-center font-bold flex-shrink-0 text-2xl"
+              className="w-16 h-16 rounded-full flex items-center justify-center font-bold shrink-0 text-2xl"
               style={{
                 background: 'rgba(0,255,200,.08)',
                 border:     '2px solid rgba(0,255,200,.3)',

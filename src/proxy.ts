@@ -20,7 +20,10 @@ export async function proxy(request: NextRequest) {
     pathname === '/login'               ||
     pathname === '/register'            ||
     pathname === '/forgot-password'     ||
-    pathname === '/support'
+    pathname === '/support'             ||
+    pathname === '/api/workouts'        ||
+    pathname === '/api/meals'           
+
   ) {
     return NextResponse.next();
   }

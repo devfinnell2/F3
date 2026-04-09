@@ -44,7 +44,7 @@ export default function ClientSidebar({
 }: ClientSidebarProps) {
   return (
     <aside
-      className="w-56 flex-shrink-0 flex flex-col overflow-y-auto"
+      className="w-56 shrink-0 flex flex-col overflow-y-auto"
       style={{
         background:  'rgba(0,0,0,.45)',
         borderRight: '1px solid rgba(0,255,200,.1)',
@@ -62,7 +62,7 @@ export default function ClientSidebar({
           }}
         >
           <div
-            className="w-9 h-9 rounded-full flex items-center justify-center text-base font-bold flex-shrink-0"
+            className="w-9 h-9 rounded-full flex items-center justify-center text-base font-bold shrink-0"
             style={{
               background: 'rgba(0,255,200,.09)',
               border:     '1px solid rgba(0,255,200,.28)',
@@ -131,7 +131,7 @@ export default function ClientSidebar({
                 }}
               >
                 <span
-                  className="w-1 h-1 rotate-45 flex-shrink-0"
+                  className="w-1 h-1 rotate-45 shrink-0"
                   style={{ border: '1px solid currentColor' }}
                 />
                 {item.label}
@@ -170,7 +170,7 @@ export default function ClientSidebar({
               }}
             >
               <div
-                className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
+                className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
                 style={{
                   background: 'rgba(168,85,247,.1)',
                   border:     '1px solid rgba(168,85,247,.28)',

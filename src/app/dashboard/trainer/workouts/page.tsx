@@ -101,7 +101,7 @@ export default async function TrainerWorkoutsPage({ searchParams }: PageProps) {
 
                         {/* Client selector */}
                         <div
-                            className="w-48 flex-shrink-0"
+                            className="w-48 shrink-0"
                             style={{ fontFamily: 'Courier New, monospace' }}
                         >
                             <div
@@ -126,7 +126,7 @@ export default async function TrainerWorkoutsPage({ searchParams }: PageProps) {
                                             }}
                                         >
                                             <div
-                                                className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
+                                                className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
                                                 style={{
                                                     background: 'rgba(0,255,200,.09)',
                                                     border: '1px solid rgba(0,255,200,.28)',

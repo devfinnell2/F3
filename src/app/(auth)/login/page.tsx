@@ -94,7 +94,7 @@ export default function LoginPage() {
 
       {/* ── Right panel — login form ── */}
       <div
-        className="w-full lg:w-[420px] flex-shrink-0 flex flex-col justify-center px-8 py-12"
+        className="w-full lg:w-105 shrink-0 flex flex-col justify-center px-8 py-12"
         style={{ background: 'rgba(0,0,0,.55)', borderLeft: '1px solid rgba(168,85,247,.14)' }}
       >
         <div className="text-sm tracking-widest mb-6" style={{ color: 'rgba(168,85,247,.4)' }}>
