@@ -6,7 +6,7 @@
 
 import { buildISSAContext, detectQueryType } from './issa-context';
 
-interface ClientContext {
+export interface ClientContext {
   name:         string;
   currentLevel: number;
   expPoints:    number;
