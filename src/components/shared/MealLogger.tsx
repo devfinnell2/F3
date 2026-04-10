@@ -118,33 +118,69 @@ export default function MealLogger({
   }
 
   // ── Save ────────────────────────────────────
-  async function handleLog() {
-    setSaving(true);
-    setMessage('');
+ const [aiCorrection, setAiCorrection] = useState('');
+const [correcting,   setCorrecting  ] = useState(false);
 
-    try {
-      const res = await fetch(`/api/meals/${clientId}`, {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ meals, totalMacros: totals }),
-      });
+async function handleLog() {
+  setSaving(true);
+  setMessage('');
 
-      const data = await res.json();
+  try {
+    const res = await fetch(`/api/meals/${clientId}`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ meals, totalMacros: totals }),
+    });
 
-      if (!res.ok) {
-        setMessage(data.error ?? 'Save failed.');
-      } else {
-        setMessage('✓ Meals logged successfully.');
-        setMeals([{ ...EMPTY_MEAL, foods: [{ ...EMPTY_FOOD }] }]);
-        onLogged?.();
+    const data = await res.json();
+
+    if (!res.ok) {
+      setMessage(data.error ?? 'Save failed.');
+    } else {
+      setMessage('✓ Meals logged successfully.');
+
+      // ── Trigger AI macro correction ───────────
+      setCorrecting(true);
+      try {
+        const flatMeals = meals.flatMap(m =>
+          m.foods.map(f => ({
+            name:     `${m.mealName} — ${f.name}`,
+            calories: f.calories ?? 0,
+            protein:  f.protein  ?? 0,
+            carbs:    f.carbs    ?? 0,
+            fats:     f.fats     ?? 0,
+          }))
+        );
+
+        const aiRes = await fetch('/api/ai/macros', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({
+            clientId,
+            loggedMeals: flatMeals,
+          }),
+        });
+
+        const aiData = await aiRes.json();
+        if (aiRes.ok && aiData.suggestion) {
+          setAiCorrection(aiData.suggestion);
+        }
+      } catch {
+        // AI correction is non-blocking — don't fail the save
+        console.warn('AI macro correction unavailable');
+      } finally {
+        setCorrecting(false);
       }
-    } catch {
-      setMessage('Network error. Please try again.');
-    } finally {
-      setSaving(false);
-    }
-  }
 
+      setMeals([{ ...EMPTY_MEAL, foods: [{ ...EMPTY_FOOD }] }]);
+      onLogged?.();
+    }
+  } catch {
+    setMessage('Network error. Please try again.');
+  } finally {
+    setSaving(false);
+  }
+}
   return (
     <div style={{ fontFamily: 'Courier New, monospace', color: '#e0d8ff' }}>
 
@@ -431,6 +467,56 @@ export default function MealLogger({
           </span>
         )}
       </div>
+      {/* ── AI Macro Correction ── */}
+      {correcting && (
+        <div
+          className="mt-4 p-4 rounded-lg text-sm"
+          style={{
+            background: 'rgba(0,255,200,.04)',
+            border:     '1px solid rgba(0,255,200,.15)',
+            color:      'rgba(0,255,200,.6)',
+            fontFamily: 'Courier New, monospace',
+          }}
+        >
+          F3 AI analyzing macros...
+        </div>
+      )}
+
+      {aiCorrection && !correcting && (
+        <div
+          className="mt-4 p-4 rounded-lg"
+          style={{
+            background: 'rgba(0,255,200,.04)',
+            border:     '1px solid rgba(0,255,200,.2)',
+          }}
+        >
+          <div
+            className="text-xs tracking-widest mb-2"
+            style={{ color: 'rgba(0,255,200,.5)' }}
+          >
+            🤖 F3 AI — MACRO CORRECTION
+          </div>
+          <div
+            className="text-sm leading-relaxed whitespace-pre-wrap"
+            style={{ color: '#a7f3d0' }}
+          >
+            {aiCorrection}
+          </div>
+          <button
+            onClick={() => setAiCorrection('')}
+            className="mt-3 text-xs px-3 py-1 rounded"
+            style={{
+              background: 'transparent',
+              border:     '1px solid rgba(0,255,200,.2)',
+              color:      'rgba(0,255,200,.5)',
+              cursor:     'pointer',
+              fontFamily: 'Courier New, monospace',
+            }}
+          >
+            DISMISS
+          </button>
+        </div>
+      )}
     </div>
   );
 }
