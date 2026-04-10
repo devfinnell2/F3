@@ -10,6 +10,7 @@ import UserModel             from '@/lib/db/models/User';
 import ClientProfileModel    from '@/lib/db/models/ClientProfile';
 import TrainerSidebar        from '@/components/trainer/TrainerSidebar';
 import ClientCard            from '@/components/trainer/ClientCard';
+import SmartAdjustments from '@/components/trainer/SmartAdjustments';
 
 export default async function TrainerDashboard() {
   const session = await getServerSession(authOptions);
@@ -179,6 +180,7 @@ export default async function TrainerDashboard() {
             ))}
           </div>
         )}
+        <SmartAdjustments />
       </main>
     </div>
   );
