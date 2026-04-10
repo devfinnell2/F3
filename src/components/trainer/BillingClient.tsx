@@ -16,7 +16,7 @@ const PLANS = [
   {
     tier:        'pro' as const,
     name:        'PRO',
-    price:       '$29',
+    price:       '$10',
     period:      '/month',
     color:       '#d8b4fe',
     borderColor: 'rgba(168,85,247,.3)',
@@ -33,7 +33,7 @@ const PLANS = [
   {
     tier:        'elite' as const,
     name:        'ELITE',
-    price:       '$59',
+    price:       '$20',
     period:      '/month',
     color:       '#fbbf24',
     borderColor: 'rgba(251,191,36,.4)',

@@ -29,7 +29,7 @@ export async function proxy(request: NextRequest) {
   // ── Get JWT token ──────────────────────────
   const token = await getToken({
     req:    request,
-    secret: process.env.NEXTAUTH_SECRET,
+    secret: process.env.NEXTAUTH_SECRET
   });
 
   // ── Not logged in — redirect to login ──────

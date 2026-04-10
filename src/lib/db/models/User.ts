@@ -5,29 +5,29 @@
 import mongoose, { Schema, type Document, type Model } from 'mongoose';
 import type { IUser } from '@/types';
 
-export interface IUserDocument extends Omit<IUser, '_id'>, Document {}
+export interface IUserDocument extends Omit<IUser, '_id'>, Document { }
 
 const UserSchema = new Schema<IUserDocument>(
   {
     name: {
-      type:     String,
+      type: String,
       required: true,
-      trim:     true,
+      trim: true,
     },
     email: {
-      type:      String,
-      required:  true,
-      unique:    true,
+      type: String,
+      required: true,
+      unique: true,
       lowercase: true,
-      trim:      true,
+      trim: true,
     },
     passwordHash: {
-      type:     String,
+      type: String,
       required: true,
     },
     role: {
-      type:    String,
-      enum:    ['admin', 'trainer', 'client', 'basic'],
+      type: String,
+      enum: ['admin', 'trainer', 'client', 'basic'],
       default: 'client',
     },
     tier: {
@@ -35,26 +35,38 @@ const UserSchema = new Schema<IUserDocument>(
       enum: ['elite', 'pro'],
     },
     status: {
-      type:    String,
-      enum:    ['active', 'suspended', 'pending', 'deleted'],
+      type: String,
+      enum: ['active', 'suspended', 'pending', 'deleted'],
       default: 'active',
     },
     trainerId: {
       type: Schema.Types.ObjectId,
-      ref:  'User',
+      ref: 'User',
     },
     issaCertId: {
-      type:  String,
-      trim:  true,
+      type: String,
+      trim: true,
     },
     issaVerified: {
-      type:    Boolean,
+      type: Boolean,
       default: false,
     },
     avatarInitials: {
-      type:    String,
-      trim:    true,
+      type: String,
+      trim: true,
       maxlength: 3,
+    },
+    currentLevel: {
+      type: Number,
+      default: 100,  // trainers start at 100
+    },
+    expPoints: {
+      type: Number,
+      default: 0,
+    },
+    tier: {
+      type: String,
+      enum: ['elite', 'pro'],
     },
   },
   {

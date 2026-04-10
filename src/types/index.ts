@@ -242,5 +242,8 @@ declare module 'next-auth/jwt' {
     role:    UserRole;
     tier?:   PlanTier;
     status:  AccountStatus;
+    issaVerified?:  boolean;
+    currentLevel?:  number;
+    expPoints?:     number;
   }
 }
