@@ -2,18 +2,18 @@
 //  F3 — Trainer Meals Page
 // ─────────────────────────────────────────────
 
-import { getServerSession }  from 'next-auth';
-import { authOptions }       from '@/lib/auth/config';
-import { redirect }          from 'next/navigation';
-import { connectDB }         from '@/lib/db/mongoose';
-import UserModel             from '@/lib/db/models/User';
-import MealPlanModel         from '@/lib/db/models/MealPlan';
-import TrainerSidebar        from '@/components/trainer/TrainerSidebar';
-import MealLogger            from '@/components/shared/MealLogger';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth/config';
+import { redirect } from 'next/navigation';
+import { connectDB } from '@/lib/db/mongoose';
+import UserModel from '@/lib/db/models/User';
+import MealPlanModel from '@/lib/db/models/MealPlan';
+import TrainerSidebar from '@/components/trainer/TrainerSidebar';
+import MealLogger from '@/components/shared/MealLogger';
 import type { IDailyMacros } from '@/types';
 
 interface PageProps {
-  searchParams: { clientId?: string };
+  searchParams: Promise<{ clientId?: string }>;
 }
 
 export default async function TrainerMealsPage({ searchParams }: PageProps) {
@@ -26,17 +26,17 @@ export default async function TrainerMealsPage({ searchParams }: PageProps) {
   await connectDB();
 
   const clients = await UserModel.find({
-    role:      'client',
+    role: 'client',
     trainerId: session.user.id,
-    status:    'active',
+    status: 'active',
   })
     .select('name avatarInitials')
     .lean();
 
   const trainer = {
-    name:           session.user.name  ?? 'Trainer',
-    email:          session.user.email ?? '',
-    tier:           session.user.tier  ?? 'pro',
+    name: session.user.name ?? 'Trainer',
+    email: session.user.email ?? '',
+    tier: session.user.tier ?? 'pro',
     avatarInitials: (session.user.name ?? 'T')
       .split(' ')
       .map((p: string) => p[0])
@@ -45,19 +45,20 @@ export default async function TrainerMealsPage({ searchParams }: PageProps) {
       .slice(0, 2),
   };
 
-  const selectedId     = searchParams.clientId ?? clients[0]?._id.toString();
+  const resolvedParams = await searchParams;
+  const selectedId = resolvedParams.clientId ?? clients[0]?._id.toString();
   const selectedClient = clients.find(c => c._id.toString() === selectedId);
 
   let targetMacros: IDailyMacros = {
     calories: 2400,
-    protein:  140,
-    carbs:    240,
-    fats:     80,
+    protein: 140,
+    carbs: 240,
+    fats: 80,
   };
 
   if (selectedId) {
     const mealPlan = await MealPlanModel.findOne({
-      clientId:  selectedId,
+      clientId: selectedId,
       trainerId: session.user.id,
     }).lean();
 
@@ -91,7 +92,7 @@ export default async function TrainerMealsPage({ searchParams }: PageProps) {
             className="rounded-lg p-8 text-center"
             style={{
               background: 'rgba(255,255,255,.035)',
-              border:     '1px solid rgba(168,85,247,.16)',
+              border: '1px solid rgba(168,85,247,.16)',
             }}
           >
             <div className="text-lg mb-2" style={{ color: 'rgba(168,85,247,.5)' }}>
@@ -121,9 +122,9 @@ export default async function TrainerMealsPage({ searchParams }: PageProps) {
                       href={`/dashboard/trainer/meals?clientId=${client._id}`}
                       className="flex items-center gap-2 px-3 py-2 rounded transition-all text-sm"
                       style={{
-                        background:     isSelected ? 'rgba(168,85,247,.1)'          : 'transparent',
-                        border:         isSelected ? '1px solid rgba(168,85,247,.3)' : '1px solid transparent',
-                        color:          isSelected ? '#e9d5ff'                       : 'rgba(192,132,252,.5)',
+                        background: isSelected ? 'rgba(168,85,247,.1)' : 'transparent',
+                        border: isSelected ? '1px solid rgba(168,85,247,.3)' : '1px solid transparent',
+                        color: isSelected ? '#e9d5ff' : 'rgba(192,132,252,.5)',
                         textDecoration: 'none',
                       }}
                     >
@@ -131,8 +132,8 @@ export default async function TrainerMealsPage({ searchParams }: PageProps) {
                         className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
                         style={{
                           background: 'rgba(0,255,200,.09)',
-                          border:     '1px solid rgba(0,255,200,.28)',
-                          color:      '#6ee7c8',
+                          border: '1px solid rgba(0,255,200,.28)',
+                          color: '#6ee7c8',
                         }}
                       >
                         {client.avatarInitials ?? '??'}
@@ -172,7 +173,7 @@ export default async function TrainerMealsPage({ searchParams }: PageProps) {
                   className="rounded-lg p-8 text-center"
                   style={{
                     background: 'rgba(255,255,255,.035)',
-                    border:     '1px solid rgba(168,85,247,.16)',
+                    border: '1px solid rgba(168,85,247,.16)',
                   }}
                 >
                   <div style={{ color: 'rgba(168,85,247,.5)' }}>

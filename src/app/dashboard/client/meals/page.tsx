@@ -91,8 +91,8 @@ export default async function ClientMealsPage() {
         >
           LOG MY MEALS
         </h1>
-        <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,.32)' }}>
-          Log your meals with precise measurements. AI macro correction coming in Phase 2.
+       <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,.32)' }}>
+          Log your meals with precise measurements. AI analyzes your macros after logging.
         </p>
 
         {/* Assigned meal plan reference */}

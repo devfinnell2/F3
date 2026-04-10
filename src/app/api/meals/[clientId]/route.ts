@@ -82,6 +82,8 @@ export async function POST(request: Request, { params }: RouteParams) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
+    // ── Upsert meal plan if it doesn't exist ───
+    // Clients can log meals even without a trainer-assigned plan
     const mealPlan = await MealPlanModel.findOneAndUpdate(
       { clientId },
       {
@@ -97,16 +99,15 @@ export async function POST(request: Request, { params }: RouteParams) {
             },
           },
         },
+        $setOnInsert: {
+          clientId,
+          trainerId:    clientId, // placeholder until trainer assigns
+          meals:        [],
+          targetMacros: { calories: 0, protein: 0, carbs: 0, fats: 0 },
+        },
       },
-      { new: true }
+      { upsert: true, new: true }
     );
-
-    if (!mealPlan) {
-      return NextResponse.json(
-        { error: 'No meal plan found. Ask your trainer to create one first.' },
-        { status: 404 }
-      );
-    }
 
     return NextResponse.json(
       { message: 'Meal logged.', mealPlan },

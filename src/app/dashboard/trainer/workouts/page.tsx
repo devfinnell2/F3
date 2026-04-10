@@ -14,7 +14,7 @@ import WorkoutBuilder from '@/components/trainer/WorkoutBuilder';
 import type { IWorkoutDay } from '@/types';
 
 interface PageProps {
-    searchParams: { clientId?: string };
+    searchParams: Promise<{ clientId?: string }>;
 }
 
 export default async function TrainerWorkoutsPage({ searchParams }: PageProps) {
@@ -48,7 +48,8 @@ export default async function TrainerWorkoutsPage({ searchParams }: PageProps) {
     };
 
     // ── Selected client ─────────────────────────
-    const selectedId = searchParams.clientId ?? clients[0]?._id.toString();
+    const resolvedParams = await searchParams;
+    const selectedId = resolvedParams.clientId ?? clients[0]?._id.toString();
     const selectedClient = clients.find(c => c._id.toString() === selectedId);
 
     // ── Fetch existing plan ─────────────────────
@@ -151,7 +152,6 @@ export default async function TrainerWorkoutsPage({ searchParams }: PageProps) {
                                     clientId={selectedId!}
                                     clientName={selectedClient.name}
                                     initialPlan={existingPlan}
-                                    onSaved={() => { }}
                                 />
                             ) : (
                                 <div

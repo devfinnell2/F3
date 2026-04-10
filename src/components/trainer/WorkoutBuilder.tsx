@@ -9,10 +9,10 @@ import { useState } from 'react';
 import type { IExercise, IWorkoutDay } from '@/types';
 
 interface WorkoutBuilderProps {
-  clientId: string;
-  clientName: string;
+  clientId:    string;
+  clientName:  string;
   initialPlan: IWorkoutDay[];
-  onSaved: () => void;
+  onSaved?:    () => void;
 }
 
 const EMPTY_EXERCISE: IExercise = {
@@ -177,7 +177,7 @@ export default function WorkoutBuilder({
         setMessage(data.error ?? 'Save failed.');
       } else {
         setMessage('✓ Plan saved successfully.');
-        onSaved();
+        onSaved?.();
       }
     } catch {
       setMessage('Network error. Please try again.');
