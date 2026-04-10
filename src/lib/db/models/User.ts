@@ -5,7 +5,10 @@
 import mongoose, { Schema, type Document, type Model } from 'mongoose';
 import type { IUser } from '@/types';
 
-export interface IUserDocument extends Omit<IUser, '_id'>, Document { }
+export interface IUserDocument extends Omit<IUser, '_id'>, Document {
+  currentLevel?: number;
+  expPoints?:    number;
+}
 
 const UserSchema = new Schema<IUserDocument>(
   {
@@ -63,10 +66,6 @@ const UserSchema = new Schema<IUserDocument>(
     expPoints: {
       type: Number,
       default: 0,
-    },
-    tier: {
-      type: String,
-      enum: ['elite', 'pro'],
     },
   },
   {
