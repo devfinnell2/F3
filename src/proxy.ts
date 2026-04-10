@@ -9,10 +9,11 @@ import { getToken }         from 'next-auth/jwt';
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // ── Always allow through ─────────────────────
+  // ── Always allow through ───────────────────
+  // Only truly public routes — no auth needed
   if (
     pathname.startsWith('/api/auth')    ||
-    pathname.startsWith('/api/users')   ||  
+    pathname.startsWith('/api/users')   ||
     pathname.startsWith('/_next')       ||
     pathname.startsWith('/favicon')     ||
     pathname.startsWith('/.well-known') ||
@@ -20,21 +21,18 @@ export async function proxy(request: NextRequest) {
     pathname === '/login'               ||
     pathname === '/register'            ||
     pathname === '/forgot-password'     ||
-    pathname === '/support'             ||
-    pathname === '/api/workouts'        ||
-    pathname === '/api/meals'           
-
+    pathname === '/support'
   ) {
     return NextResponse.next();
   }
-
-  // ── Get JWT token ────────────────────────────
+  
+  // ── Get JWT token ──────────────────────────
   const token = await getToken({
     req:    request,
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  // ── Not logged in — redirect to login ────────
+  // ── Not logged in — redirect to login ──────
   if (!token) {
     const loginUrl = new URL('/login', request.url);
     loginUrl.searchParams.set('callbackUrl', pathname);
@@ -43,12 +41,12 @@ export async function proxy(request: NextRequest) {
 
   const role = token.role as string;
 
-  // ── Admin dashboard — admin only ─────────────
+  // ── Admin dashboard — admin only ───────────
   if (pathname.startsWith('/dashboard/admin') && role !== 'admin') {
     return NextResponse.redirect(new URL('/dashboard/client', request.url));
   }
 
-  // ── Trainer dashboard — trainer or admin ─────
+  // ── Trainer dashboard — trainer or admin ───
   if (
     pathname.startsWith('/dashboard/trainer') &&
     role !== 'trainer' &&
@@ -57,7 +55,8 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL('/dashboard/client', request.url));
   }
 
-  // ── AI API routes — trainer or admin only ────
+  // ── AI API routes — trainer or admin only ──
+  // Double-enforced here AND inside the route handlers
   if (
     pathname.startsWith('/api/ai') &&
     role !== 'trainer' &&
