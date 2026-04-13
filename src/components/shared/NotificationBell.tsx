@@ -20,6 +20,18 @@ const TYPE_ICON: Record<string, string> = {
     goal_achieved: '🎯',
 };
 
+// ── Module-level AudioContext — persists across navigation ──
+let _audioCtx: AudioContext | null = null;
+function getAudioCtx(): AudioContext | null {
+    if (typeof window === 'undefined') return null;
+    if (!_audioCtx) {
+        try {
+            _audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+        } catch { return null; }
+    }
+    return _audioCtx;
+}
+
 export default function NotificationBell({ accentColor = '#a855f7' }: { accentColor?: string }) {
     const [notifications, setNotifications] = useState<AppNotification[]>([]);
     const [unread, setUnread] = useState(0);
@@ -27,20 +39,7 @@ export default function NotificationBell({ accentColor = '#a855f7' }: { accentCo
     const [pushGranted, setPushGranted] = useState(false);
     const panelRef = useRef<HTMLDivElement>(null);
 
-    const prevUnreadRef = useRef(0);
-    const audioCtxRef = useRef<AudioContext | null>(null);
-
-    // Initialize AudioContext on first user interaction (browser requirement)
-    useEffect(() => {
-        const init = () => {
-            if (!audioCtxRef.current) {
-                audioCtxRef.current = new (window.AudioContext ||
-                    (window as any).webkitAudioContext)();
-            }
-        };
-        document.addEventListener('click', init, { once: true });
-        return () => document.removeEventListener('click', init);
-    }, []);
+    const prevUnreadRef = useRef(-1);
 
     const fetchNotifications = useCallback(async () => {
         const res = await fetch('/api/notifications');
@@ -50,7 +49,7 @@ export default function NotificationBell({ accentColor = '#a855f7' }: { accentCo
         // Play chime if new notifications arrived
         if (newUnread > prevUnreadRef.current && prevUnreadRef.current >= 0) {
             try {
-                const ctx = audioCtxRef.current;
+                const ctx = getAudioCtx();
                 if (ctx) {
                     if (ctx.state === 'suspended') await ctx.resume();
                     const osc = ctx.createOscillator();
@@ -132,12 +131,7 @@ export default function NotificationBell({ accentColor = '#a855f7' }: { accentCo
         setNotifications(prev => prev.map(n => ({ ...n, read: true })));
     };
 
-    const togglePanel = () => {
-        setOpen(prev => {
-            if (!prev && unread > 0) markAllRead();
-            return !prev;
-        });
-    };
+    const togglePanel = () => setOpen(prev => !prev);
 
     return (
         <div ref={panelRef} style={{ position: 'relative' }}>

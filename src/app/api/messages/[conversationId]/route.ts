@@ -2,14 +2,15 @@
 //  GET  — fetch messages between two users
 //  POST — send a message
 // ─────────────────────────────────────────────
+import NotificationModel from '@/lib/db/models/Notification';
 import { sendNotification } from '@/lib/notifications/push';
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession }          from 'next-auth';
-import { authOptions }               from '@/lib/auth/config';
-import { connectDB }                 from '@/lib/db/mongoose';
-import MessageModel                  from '@/lib/db/models/Message';
-import UserModel                     from '@/lib/db/models/User';
-import mongoose                      from 'mongoose';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth/config';
+import { connectDB } from '@/lib/db/mongoose';
+import MessageModel from '@/lib/db/models/Message';
+import UserModel from '@/lib/db/models/User';
+import mongoose from 'mongoose';
 
 interface RouteContext {
   params: Promise<{ conversationId: string }>;
@@ -21,7 +22,7 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
 
   const { conversationId } = await params;
   const otherId = conversationId;
-  const myId    = session.user.id;
+  const myId = session.user.id;
 
   // Validate both IDs
   if (!mongoose.Types.ObjectId.isValid(otherId)) {
@@ -35,7 +36,7 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
   if (!otherUser) return NextResponse.json({ error: 'User not found' }, { status: 404 });
 
   const isTrainer = session.user.role === 'trainer';
-  const isClient  = session.user.role === 'client';
+  const isClient = session.user.role === 'client';
 
   // Trainers can only message their clients; clients can only message their trainer
   if (isClient && otherUser._id.toString() !== otherUser._id.toString()) {
@@ -52,8 +53,8 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
   const messages = await MessageModel
     .find({
       $or: [
-        { senderId: myId,     receiverId: otherId },
-        { senderId: otherId,  receiverId: myId    },
+        { senderId: myId, receiverId: otherId },
+        { senderId: otherId, receiverId: myId },
       ],
     })
     .sort({ createdAt: 1 })
@@ -64,7 +65,11 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
     { senderId: otherId, receiverId: myId, read: false },
     { read: true }
   );
-
+  // Mark message notifications as read too
+  await NotificationModel.updateMany(
+    { userId: myId, type: 'message', read: false },
+    { read: true }
+  );
   return NextResponse.json({ messages });
 }
 
@@ -74,7 +79,7 @@ export async function POST(req: NextRequest, { params }: RouteContext) {
 
   const { conversationId } = await params;
   const receiverId = conversationId;
-  const senderId   = session.user.id;
+  const senderId = session.user.id;
 
   if (!mongoose.Types.ObjectId.isValid(receiverId)) {
     return NextResponse.json({ error: 'Invalid receiver ID' }, { status: 400 });
@@ -92,7 +97,7 @@ export async function POST(req: NextRequest, { params }: RouteContext) {
 
   // Role guard
   const isTrainer = session.user.role === 'trainer';
-  const isClient  = session.user.role === 'client';
+  const isClient = session.user.role === 'client';
   if (isTrainer && receiver.role !== 'client' && receiver.role !== 'basic') {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
@@ -100,26 +105,26 @@ export async function POST(req: NextRequest, { params }: RouteContext) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
- const newMessage = await MessageModel.create({
+  const newMessage = await MessageModel.create({
     senderId,
     receiverId,
     message: message.trim(),
-    read:    false,
+    read: false,
   });
 
   // ── Push notification to receiver ──────────
   const sender = await UserModel.findById(senderId).select('name').lean();
   const senderName = (sender as any)?.name ?? 'Your trainer';
-  const targetUrl  = receiver.role === 'client'
+  const targetUrl = receiver.role === 'client'
     ? '/dashboard/client/messages'
     : '/dashboard/trainer/messages';
 
- // fire-and-forget — don't block the response
+  // fire-and-forget — don't block the response
   sendNotification(receiverId, 'message', {
     title: `💬 New message from ${senderName}`,
-    body:  message.trim().slice(0, 100),
-    url:   targetUrl,
-  }).catch(() => {});
+    body: message.trim().slice(0, 100),
+    url: targetUrl,
+  }).catch(() => { });
 
   return NextResponse.json({ message: newMessage }, { status: 201 });
 }
