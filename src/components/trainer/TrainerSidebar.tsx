@@ -29,8 +29,11 @@ const navItems = [
   { id: 'bmi', label: 'BMI Calc', href: '/dashboard/trainer/bmi' },
   { id: 'calendar', label: 'Calendar', href: '/dashboard/trainer/calendar' },
   { id: 'messages', label: 'Messages', href: '/dashboard/trainer/messages' },
-  { id: 'profile', label: 'My Profile', href: '/dashboard/trainer/profile' },
-  { id: 'billing', label: 'Billing', href: '/dashboard/trainer/billing' },
+  { id: 'profile',   label: 'My Profile',  href: '/dashboard/trainer/profile'        },
+  { id: 'myworkout', label: 'My Workout',  href: '/dashboard/trainer/profile/workout' },
+  { id: 'mymeal',    label: 'My Meals',    href: '/dashboard/trainer/profile/meals'   },
+  { id: 'mysups',    label: 'My Supps',    href: '/dashboard/trainer/profile/supps'   },
+  { id: 'billing',   label: 'Billing',     href: '/dashboard/trainer/billing'         },
 ];
 
 export default function TrainerSidebar({
