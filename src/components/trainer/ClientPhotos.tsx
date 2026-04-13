@@ -59,7 +59,7 @@ export default function ClientPhotos({
               )}
             </div>
             <div style={{
-              width: '100%', aspectRatio: '3/4',
+              width: '100%', aspectRatio: '2/3',
               borderRadius: '8px',
               border:       `1px solid ${accent}33`,
               background:   `${accent}08`,
@@ -72,7 +72,7 @@ export default function ClientPhotos({
                 <img
                   src={url}
                   alt={`${label} photo`}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  style={{ width: '100%', height: '100%', objectFit: 'contain', background: '#000' }}
                 />
               ) : (
                 <p style={{ color: `${accent}44`, fontSize: '0.7rem', letterSpacing: '0.1em' }}>

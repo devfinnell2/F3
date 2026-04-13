@@ -67,6 +67,10 @@ export default async function ClientDashboard() {
     waistGoal:     profile?.waistGoal     ?? null,
     waistCurrent:  profile?.waistCurrent  ?? null,
     weightHistory: profile?.weightHistory ?? [],
+    beforePhoto:     (profile as any)?.beforePhoto     ?? null,
+    afterPhoto:      (profile as any)?.afterPhoto      ?? null,
+    beforePhotoDate: (profile as any)?.beforePhotoDate ?? null,
+    afterPhotoDate:  (profile as any)?.afterPhotoDate  ?? null,
   };
 
   const trainerData = trainer
@@ -325,7 +329,7 @@ export default async function ClientDashboard() {
           </div>
         )}
 
-        {/* Progress photos */}
+       {/* Progress photos */}
         <div
           className="rounded-lg p-4"
           style={{
@@ -333,44 +337,73 @@ export default async function ClientDashboard() {
             border:     '1px solid rgba(244,114,182,.14)',
           }}
         >
-          <div
-            className="text-xs tracking-widest mb-3"
-            style={{ color: 'rgba(244,114,182,.48)' }}
-          >
-            PROGRESS PHOTOS
+          <div className="flex justify-between items-center mb-3">
+            <div className="text-xs tracking-widest" style={{ color: 'rgba(244,114,182,.48)' }}>
+              PROGRESS PHOTOS
+            </div>
+            
+             <a href="/dashboard/client/photos"
+              className="text-xs font-bold tracking-widest"
+              style={{ color: '#f472b6', textDecoration: 'none' }}
+            >
+              MANAGE →
+            </a>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            {['BEFORE PHOTO', 'LATEST PHOTO'].map((label, i) => (
+            {[
+              { label: 'BEFORE', url: clientData.beforePhoto,  accent: '#a855f7' },
+              { label: 'AFTER',  url: clientData.afterPhoto,   accent: '#00ffc8' },
+            ].map(({ label, url, accent }) => (
               <div
                 key={label}
-                className="h-28 rounded-lg flex items-center justify-center text-xs font-bold tracking-widest"
                 style={{
-                  background: i === 0
-                    ? 'rgba(168,85,247,.08)'
-                    : 'rgba(0,255,200,.08)',
-                  border: i === 0
-                    ? '1px solid rgba(168,85,247,.22)'
-                    : '1px solid rgba(0,255,200,.25)',
-                  color: i === 0 ? '#c084fc' : '#6ee7c8',
-                  cursor: 'pointer',
+                  aspectRatio:    '2/3',
+                  borderRadius:   '10px',
+                  overflow:       'hidden',
+                  border:         `1px solid ${accent}33`,
+                  background:     `${accent}08`,
+                  display:        'flex',
+                  alignItems:     'center',
+                  justifyContent: 'center',
+                  position:       'relative',
                 }}
               >
-                📷 {label}
+                {url ? (
+                  <img
+                    src={url}
+                    alt={`${label} photo`}
+                    style={{ width: '100%', height: '100%', objectFit: 'contain', background: '#000' }}
+                  />
+                ) : (
+                  <div style={{ textAlign: 'center' }}>
+                    <p style={{ fontSize: '1.5rem', margin: '0 0 4px' }}>📷</p>
+                    <p style={{ color: `${accent}88`, fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.1em', margin: 0 }}>
+                      {label} PHOTO
+                    </p>
+                  </div>
+                )}
               </div>
             ))}
           </div>
-          <button
-            className="mt-3 px-4 py-2 text-xs font-bold tracking-widest rounded transition-all"
-            style={{
-              background: 'rgba(244,114,182,.07)',
-              border:     '1px solid rgba(244,114,182,.32)',
-              color:      '#f472b6',
-              fontFamily: 'Courier New, monospace',
-              cursor:     'pointer',
-            }}
-          >
-            + UPLOAD NEW PHOTO
-          </button>
+          {clientData.beforePhoto && clientData.afterPhoto && (
+            <p style={{ margin: '10px 0 0', textAlign: 'center', fontSize: '0.72rem', color: '#6ee7c8' }}>
+              🏆 TRANSFORMATION IN PROGRESS
+            </p>
+          )}
+          {!clientData.beforePhoto && !clientData.afterPhoto && (
+            
+             <a href="/dashboard/client/photos"
+              className="mt-3 block text-center px-4 py-2 text-xs font-bold tracking-widest rounded"
+              style={{
+                background:     'rgba(244,114,182,.07)',
+                border:         '1px solid rgba(244,114,182,.32)',
+                color:          '#f472b6',
+                textDecoration: 'none',
+              }}
+            >
+              + UPLOAD YOUR FIRST PHOTO
+            </a>
+          )}
         </div>
       </main>
     </div>

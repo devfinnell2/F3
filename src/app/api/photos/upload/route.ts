@@ -29,8 +29,8 @@ export async function POST(req: NextRequest) {
     ? clientId
     : session.user.id;
 
-  // Trainers can only update their own clients
-  if (session.user.role === 'trainer' && clientId) {
+  // Trainers can only update their own clients (not other trainers' clients)
+  if (session.user.role === 'trainer' && clientId && clientId !== session.user.id) {
     await connectDB();
     const profile = await ClientProfileModel.findOne({ userId: clientId }).lean();
     if (!profile || profile.trainerId?.toString() !== session.user.id) {
