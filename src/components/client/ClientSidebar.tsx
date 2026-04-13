@@ -4,36 +4,37 @@
 
 'use client';
 
-import Link        from 'next/link';
+import Link from 'next/link';
 import { signOut } from 'next-auth/react';
+import NotificationBell from '@/components/shared/NotificationBell';
 
 interface ClientSidebarProps {
   client: {
-    name:           string;
+    name: string;
     avatarInitials: string;
-    currentLevel:   number;
-    expPoints:      number;
+    currentLevel: number;
+    expPoints: number;
   };
   trainer: {
-    name:           string;
+    name: string;
     avatarInitials: string;
-    tier:           string;
+    tier: string;
   } | null;
-  activeItem:  string;
+  activeItem: string;
   unreadCount: number;
 }
 
 const navItems = [
-  { id: 'status',      label: 'My Status',       href: '/dashboard/client'             },
-  { id: 'messages',    label: 'Messages',         href: '/dashboard/client/messages'    },
-  { id: 'meals',       label: 'Log My Meals',     href: '/dashboard/client/meals'       },
-  { id: 'workout',     label: 'Workout Plan',     href: '/dashboard/client/workout'     },
-  { id: 'calendar',    label: 'Calendar',         href: '/dashboard/client/calendar'    },
-  { id: '1rm',         label: 'My 1RM',           href: '/dashboard/client/1rm'         },
-  { id: 'supplements', label: 'Supplement Plan',  href: '/dashboard/client/supplements' },
-  { id: 'goals',       label: 'Goals',            href: '/dashboard/client/goals'       },
-  { id: 'photos',      label: 'Progress Photos',  href: '/dashboard/client/photos'      },
-  { id: 'find',        label: 'Find a Trainer',   href: '/find-trainer'                 },
+  { id: 'status', label: 'My Status', href: '/dashboard/client' },
+  { id: 'messages', label: 'Messages', href: '/dashboard/client/messages' },
+  { id: 'meals', label: 'Log My Meals', href: '/dashboard/client/meals' },
+  { id: 'workout', label: 'Workout Plan', href: '/dashboard/client/workout' },
+  { id: 'calendar', label: 'Calendar', href: '/dashboard/client/calendar' },
+  { id: '1rm', label: 'My 1RM', href: '/dashboard/client/1rm' },
+  { id: 'supplements', label: 'Supplement Plan', href: '/dashboard/client/supplements' },
+  { id: 'goals', label: 'Goals', href: '/dashboard/client/goals' },
+  { id: 'photos', label: 'Progress Photos', href: '/dashboard/client/photos' },
+  { id: 'find', label: 'Find a Trainer', href: '/find-trainer' },
 ];
 
 export default function ClientSidebar({
@@ -46,10 +47,10 @@ export default function ClientSidebar({
     <aside
       className="w-56 shrink-0 flex flex-col overflow-y-auto"
       style={{
-        background:  'rgba(0,0,0,.45)',
+        background: 'rgba(0,0,0,.45)',
         borderRight: '1px solid rgba(0,255,200,.1)',
-        minHeight:   '100vh',
-        fontFamily:  'Courier New, monospace',
+        minHeight: '100vh',
+        fontFamily: 'Courier New, monospace',
       }}
     >
       <div className="p-3">
@@ -58,15 +59,15 @@ export default function ClientSidebar({
           className="flex items-center gap-2 p-3 rounded-lg mb-3"
           style={{
             background: 'rgba(0,255,200,.06)',
-            border:     '1px solid rgba(0,255,200,.18)',
+            border: '1px solid rgba(0,255,200,.18)',
           }}
         >
           <div
             className="w-9 h-9 rounded-full flex items-center justify-center text-base font-bold shrink-0"
             style={{
               background: 'rgba(0,255,200,.09)',
-              border:     '1px solid rgba(0,255,200,.28)',
-              color:      '#6ee7c8',
+              border: '1px solid rgba(0,255,200,.28)',
+              color: '#6ee7c8',
             }}
           >
             {client.avatarInitials}
@@ -92,7 +93,7 @@ export default function ClientSidebar({
               <div
                 className="h-full rounded-full"
                 style={{
-                  width:      `${Math.min((client.expPoints % 10000) / 100, 100)}%`,
+                  width: `${Math.min((client.expPoints % 10000) / 100, 100)}%`,
                   background: 'linear-gradient(90deg, #6d28d9, #a855f7, #00ffc8)',
                 }}
               />
@@ -124,9 +125,9 @@ export default function ClientSidebar({
                 href={item.href}
                 className="flex items-center gap-2 px-3 py-2 rounded-r transition-all text-sm tracking-wide uppercase"
                 style={{
-                  color:          isActive ? '#e9d5ff'               : 'rgba(192,132,252,.42)',
-                  background:     isActive ? 'rgba(0,255,200,.08)'   : 'transparent',
-                  borderLeft:     isActive ? '2px solid #00ffc8'     : '2px solid transparent',
+                  color: isActive ? '#e9d5ff' : 'rgba(192,132,252,.42)',
+                  background: isActive ? 'rgba(0,255,200,.08)' : 'transparent',
+                  borderLeft: isActive ? '2px solid #00ffc8' : '2px solid transparent',
                   textDecoration: 'none',
                 }}
               >
@@ -166,15 +167,15 @@ export default function ClientSidebar({
               className="flex items-center gap-2 p-2 rounded-lg mb-3"
               style={{
                 background: 'rgba(168,85,247,.05)',
-                border:     '1px solid rgba(168,85,247,.12)',
+                border: '1px solid rgba(168,85,247,.12)',
               }}
             >
               <div
                 className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
                 style={{
                   background: 'rgba(168,85,247,.1)',
-                  border:     '1px solid rgba(168,85,247,.28)',
-                  color:      '#c084fc',
+                  border: '1px solid rgba(168,85,247,.28)',
+                  color: '#c084fc',
                 }}
               >
                 {trainer.avatarInitials}
@@ -199,12 +200,12 @@ export default function ClientSidebar({
           className="text-xs p-2 rounded"
           style={{
             background: 'rgba(244,114,182,.06)',
-            border:     '1px solid rgba(244,114,182,.16)',
-            color:      'rgba(244,114,182,.65)',
+            border: '1px solid rgba(244,114,182,.16)',
+            color: 'rgba(244,114,182,.65)',
             lineHeight: '1.6',
           }}
         >
-          ⚠ CLIENT SCOPE — AI managed by your trainer only.
+          ⚠ Notice — AI managed by your trainer only.
         </div>
 
         <div
@@ -217,15 +218,18 @@ export default function ClientSidebar({
           onClick={() => signOut({ callbackUrl: '/login' })}
           className="w-full text-left px-3 py-2 text-sm tracking-wide uppercase rounded"
           style={{
-            color:      'rgba(244,114,182,.55)',
+            color: 'rgba(244,114,182,.55)',
             fontFamily: 'Courier New, monospace',
             background: 'transparent',
-            border:     'none',
-            cursor:     'pointer',
+            border: 'none',
+            cursor: 'pointer',
           }}
         >
           ← SIGN OUT
         </button>
+        <div className="mt-3 flex justify-end pr-1">
+          <NotificationBell accentColor="#00ffc8" />
+        </div>
       </div>
     </aside>
   );
