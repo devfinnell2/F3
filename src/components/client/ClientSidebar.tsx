@@ -4,6 +4,7 @@
 
 'use client';
 
+import UnreadBadge from '@/components/shared/UnreadBadge';
 import Link from 'next/link';
 import { signOut } from 'next-auth/react';
 import NotificationBell from '@/components/shared/NotificationBell';
@@ -136,14 +137,7 @@ export default function ClientSidebar({
                   style={{ border: '1px solid currentColor' }}
                 />
                 {item.label}
-                {item.id === 'messages' && unreadCount > 0 && (
-                  <span
-                    className="ml-auto text-xs font-bold px-1.5 py-0.5 rounded"
-                    style={{ background: '#f472b6', color: '#fff' }}
-                  >
-                    {unreadCount}
-                  </span>
-                )}
+                {item.id === 'messages' && <UnreadBadge />}
               </Link>
             );
           })}

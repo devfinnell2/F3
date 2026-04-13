@@ -4,6 +4,7 @@
 
 'use client';
 
+import UnreadBadge from '@/components/shared/UnreadBadge';
 import Link from 'next/link';
 import { signOut } from 'next-auth/react';
 import type { PlanTier } from '@/types';
@@ -132,6 +133,7 @@ export default function TrainerSidebar({
                   style={{ border: '1px solid currentColor' }}
                 />
                 {item.label}
+                {item.id === 'messages' && <UnreadBadge />}
               </Link>
             );
           })}

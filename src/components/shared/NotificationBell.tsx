@@ -27,16 +27,52 @@ export default function NotificationBell({ accentColor = '#a855f7' }: { accentCo
     const [pushGranted, setPushGranted] = useState(false);
     const panelRef = useRef<HTMLDivElement>(null);
 
+    const prevUnreadRef = useRef(0);
+    const audioCtxRef = useRef<AudioContext | null>(null);
+
+    // Initialize AudioContext on first user interaction (browser requirement)
+    useEffect(() => {
+        const init = () => {
+            if (!audioCtxRef.current) {
+                audioCtxRef.current = new (window.AudioContext ||
+                    (window as any).webkitAudioContext)();
+            }
+        };
+        document.addEventListener('click', init, { once: true });
+        return () => document.removeEventListener('click', init);
+    }, []);
+
     const fetchNotifications = useCallback(async () => {
         const res = await fetch('/api/notifications');
         const data = await res.json();
         setNotifications(data.notifications ?? []);
-        setUnread(data.unread ?? 0);
+        const newUnread = data.unread ?? 0;
+        // Play chime if new notifications arrived
+        if (newUnread > prevUnreadRef.current && prevUnreadRef.current >= 0) {
+            try {
+                const ctx = audioCtxRef.current;
+                if (ctx) {
+                    if (ctx.state === 'suspended') await ctx.resume();
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.frequency.setValueAtTime(880, ctx.currentTime);
+                    osc.frequency.setValueAtTime(1100, ctx.currentTime + 0.1);
+                    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.4);
+                }
+            } catch { /* audio not available */ }
+        }
+        prevUnreadRef.current = newUnread;
+        setUnread(newUnread);
     }, []);
 
     useEffect(() => {
         fetchNotifications();
-        const id = setInterval(fetchNotifications, 30000); // poll every 30s
+        const id = setInterval(fetchNotifications, 5000); // poll every 5s
         return () => clearInterval(id);
     }, [fetchNotifications]);
 

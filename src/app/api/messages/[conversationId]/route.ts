@@ -2,6 +2,7 @@
 //  GET  — fetch messages between two users
 //  POST — send a message
 // ─────────────────────────────────────────────
+import { sendNotification } from '@/lib/notifications/push';
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession }          from 'next-auth';
 import { authOptions }               from '@/lib/auth/config';
@@ -99,12 +100,26 @@ export async function POST(req: NextRequest, { params }: RouteContext) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
-  const newMessage = await MessageModel.create({
+ const newMessage = await MessageModel.create({
     senderId,
     receiverId,
     message: message.trim(),
     read:    false,
   });
+
+  // ── Push notification to receiver ──────────
+  const sender = await UserModel.findById(senderId).select('name').lean();
+  const senderName = (sender as any)?.name ?? 'Your trainer';
+  const targetUrl  = receiver.role === 'client'
+    ? '/dashboard/client/messages'
+    : '/dashboard/trainer/messages';
+
+ // fire-and-forget — don't block the response
+  sendNotification(receiverId, 'message', {
+    title: `💬 New message from ${senderName}`,
+    body:  message.trim().slice(0, 100),
+    url:   targetUrl,
+  }).catch(() => {});
 
   return NextResponse.json({ message: newMessage }, { status: 201 });
 }
