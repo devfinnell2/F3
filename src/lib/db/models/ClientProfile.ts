@@ -56,6 +56,10 @@ const ClientProfileSchema = new Schema<IClientProfileDocument>(
     waistStart:    { type: Number },
     waistGoal:     { type: Number },
     waistCurrent:  { type: Number },
+    beforePhoto:   { type: String }, // Cloudinary URL
+    afterPhoto:    { type: String }, // Cloudinary URL
+    beforePhotoDate: { type: Date  },
+    afterPhotoDate:  { type: Date  },
   },
   { timestamps: true }
 );

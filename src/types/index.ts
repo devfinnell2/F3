@@ -69,6 +69,10 @@ export interface IClientProfile {
   waistStart?: number;
   waistGoal?: number;
   waistCurrent?: number;
+  beforePhoto?: string;
+  afterPhoto?: string;
+  beforePhotoDate?: Date;
+  afterPhotoDate?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
