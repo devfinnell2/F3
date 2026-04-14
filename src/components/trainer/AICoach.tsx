@@ -16,9 +16,10 @@ interface Client {
 }
 
 interface Message {
-  role:    'user' | 'assistant';
-  content: string;
-  time:    string;
+  role:         'user' | 'assistant';
+  content:      string;
+  time:         string;
+  actionResult?: string;
 }
 
 interface AICoachProps {
@@ -111,11 +112,11 @@ export default function AICoach({ clients, trainerTier }: AICoachProps) {
       }
 
       const aiMsg: Message = {
-        role:    'assistant',
-        content: data.output,
-        time:    formatTime(),
+        role:         'assistant',
+        content:      data.output,
+        time:         formatTime(),
+        actionResult: data.actionResult ?? undefined,
       };
-
       setMessages(prev => [...prev, aiMsg]);
 
     } catch {
@@ -239,6 +240,23 @@ export default function AICoach({ clients, trainerTier }: AICoachProps) {
               }}
             >
               {msg.content}
+              {msg.actionResult && (
+                <div style={{
+                  marginTop:    '10px',
+                  padding:      '8px 10px',
+                  borderRadius: '6px',
+                  background:   msg.actionResult.startsWith('✅')
+                    ? 'rgba(34,197,94,.1)' : 'rgba(251,191,36,.1)',
+                  border:       msg.actionResult.startsWith('✅')
+                    ? '1px solid rgba(34,197,94,.3)' : '1px solid rgba(251,191,36,.3)',
+                  color:        msg.actionResult.startsWith('✅') ? '#86efac' : '#fcd34d',
+                  fontSize:     '0.78rem',
+                  fontWeight:   700,
+                  letterSpacing:'0.05em',
+                }}>
+                  {msg.actionResult}
+                </div>
+              )}
               <div
                 className="text-xs mt-1 text-right"
                 style={{ color: 'rgba(255,255,255,.2)' }}

@@ -3,7 +3,9 @@
 //  POST /api/ai
 //  Trainer-only. Streams responses from Groq.
 // ─────────────────────────────────────────────
-
+import WorkoutModel    from '@/lib/db/models/Workout';
+import MealPlanModel   from '@/lib/db/models/MealPlan';
+import UserModel       from '@/lib/db/models/User';
 import { NextResponse }     from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions }      from '@/lib/auth/config';
@@ -98,7 +100,74 @@ export async function POST(request: Request) {
       tokensUsed: completion.usage?.total_tokens ?? 0,
     });
 
-    return NextResponse.json({ output }, { status: 200 });
+    // ── Detect and execute ACTION_JSON ──────────
+    let actionResult: string | null = null;
+    let cleanOutput = output;
+
+    const actionMatch = output.match(/ACTION_JSON:\s*(\{[\s\S]*?\})\s*$/);
+    if (actionMatch) {
+      // Strip action from visible output
+      cleanOutput = output.replace(/ACTION_JSON:\s*\{[\s\S]*?\}\s*$/, '').trim();
+      try {
+        const action = JSON.parse(actionMatch[1]);
+        const targetId = action.target === 'self'
+          ? session.user.id
+          : (clientId ?? session.user.id);
+
+        if (action.action === 'update_profile') {
+          // Map data fields to ClientProfile fields
+          const allowed = [
+            'goalType','goalWeight','goalDate','injuries','dietType',
+            'waistStart','waistGoal','waistCurrent','height','age',
+          ];
+          const update: Record<string, unknown> = {};
+          for (const key of allowed) {
+            if (action.data[key] !== undefined) update[key] = action.data[key];
+          }
+          if (Object.keys(update).length) {
+            await ClientProfileModel.findOneAndUpdate(
+              { userId: targetId },
+              update,
+              { upsert: true, new: true }
+            );
+            actionResult = `✅ Profile updated: ${Object.keys(update).join(', ')}`;
+          }
+        }
+
+        if (action.action === 'update_workout') {
+          if (action.data?.plan?.length) {
+            await WorkoutModel.findOneAndUpdate(
+              { clientId: targetId },
+              { clientId: targetId, trainerId: session.user.id, plan: action.data.plan },
+              { upsert: true, new: true }
+            );
+            actionResult = `✅ Workout plan saved — ${action.data.plan.length} day(s)`;
+          }
+        }
+
+        if (action.action === 'update_meal_targets') {
+          const { calories, protein, carbs, fats } = action.data ?? {};
+          if (calories && protein && carbs && fats) {
+            await MealPlanModel.findOneAndUpdate(
+              { clientId: targetId },
+              {
+                clientId:     targetId,
+                trainerId:    session.user.id,
+                targetMacros: { calories, protein, carbs, fats },
+              },
+              { upsert: true, new: true }
+            );
+            actionResult = `✅ Macro targets saved — ${calories}kcal | P:${protein}g C:${carbs}g F:${fats}g`;
+          }
+        }
+
+      } catch (err) {
+        console.error('[AI action parse error]', err);
+        actionResult = '⚠️ Action detected but could not be executed.';
+      }
+    }
+
+    return NextResponse.json({ output: cleanOutput, actionResult }, { status: 200 });
 
   } catch (error) {
     console.error('[POST /api/ai] error:', error);

@@ -21,7 +21,8 @@ interface TrainerSidebarProps {
 }
 
 const navItems = [
-  { id: 'clients', label: 'My Clients', href: '/dashboard/trainer' },
+  { id: 'clients',  label: 'My Clients',  href: '/dashboard/trainer'           },
+  { id: 'status',   label: 'My Status',   href: '/dashboard/trainer/status'    },
   { id: 'ai', label: 'F3 AI Coach', href: '/dashboard/trainer/ai' },
   { id: 'meals', label: 'Meal Plans', href: '/dashboard/trainer/meals' },
   { id: 'workouts', label: 'Workouts', href: '/dashboard/trainer/workouts' },
