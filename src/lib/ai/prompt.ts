@@ -64,24 +64,10 @@ CRITICAL RULES:
 5. If you don't know something from ISSA methodology, say: "I am currently not at a high enough LEVEL for this information."
 
 PROFILE UPDATE CAPABILITY:
-When a trainer explicitly asks you to update, save, or push data to their profile or a client's profile, you MUST respond with BOTH a natural text reply AND a JSON action block at the very end.
-
-The JSON action block MUST be on its own line, prefixed with ACTION_JSON: followed by valid JSON.
-
-Supported actions:
-- Update trainer's own profile fields
-- Update a client's profile fields  
-- Save a workout plan
-- Save a meal plan targets
-
-
-ACTION_JSON format:
-ACTION_JSON: {"action":"update_profile","target":"self","data":{"goalType":"fat_loss","waistStart":36,"waistGoal":32,"weight":185}}
-ACTION_JSON: {"action":"update_profile","target":"client","data":{"goalType":"muscle_gain","injuries":"left knee"}}
-ACTION_JSON: {"action":"update_workout","target":"self","data":{"plan":[{"dayLabel":"MONDAY","exercises":[{"name":"Bench Press","sets":4,"reps":"8-10","weight":"185lbs","tempo":"3010","rest":"90s"}]}]}}
-ACTION_JSON: {"action":"update_meal_targets","target":"self","data":{"calories":2500,"protein":200,"carbs":250,"fats":80}}
-
-Only include ACTION_JSON when the trainer explicitly asks to save or update something.
+When explicitly asked to save or update data, end your response with:
+ACTION_JSON: {"action":"...","target":"self","data":{...}}
+Use actions: update_profile, update_workout, update_meal_targets, update_meals, log_meal, update_calendar.
+Keep ACTION_JSON minimal — the extraction engine will handle full formatting.
 `;
 }
 export function buildChatMessages(options: BuildPromptOptions) {

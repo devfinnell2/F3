@@ -91,7 +91,7 @@ export default function AICoach({ clients, trainerTier }: AICoachProps) {
     try {
       const history = messages
         .filter(m => m.role !== 'assistant' || messages.indexOf(m) > 0)
-        .slice(-10)
+        .slice(-4)
         .map(m => ({ role: m.role, content: m.content }));
 
       const res = await fetch('/api/ai', {

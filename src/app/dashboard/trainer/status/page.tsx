@@ -146,31 +146,82 @@ export default async function TrainerStatusPage() {
             <div className="text-xs tracking-widest mb-3" style={{ color: 'rgba(168,85,247,.5)' }}>
               CERTIFICATIONS
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="grid grid-cols-1 gap-3">
               {certs.map(cert => {
                 const color = CERT_COLORS[cert] ?? '#a855f7';
                 return (
                   <div key={cert} style={{
-                    display: 'flex', alignItems: 'center', gap: '10px',
-                    padding: '10px 12px', borderRadius: '8px',
-                    background: `${color}0a`, border: `1px solid ${color}33`,
+                    borderRadius: '12px',
+                    overflow: 'hidden',
+                    border: `1px solid ${color}44`,
+                    background: `linear-gradient(135deg, #0a0612 0%, ${color}18 100%)`,
                   }}>
+                    {/* Badge header */}
                     <div style={{
-                      width: '8px', height: '8px', borderRadius: '50%',
-                      background: color, flexShrink: 0,
-                      boxShadow: `0 0 6px ${color}`,
-                    }} />
-                    <span style={{ fontWeight: 700, color: '#e9d5ff', fontSize: '0.85rem', letterSpacing: '0.05em' }}>
-                      {cert}
-                    </span>
-                    {isVerified && (
-                      <span style={{ marginLeft: 'auto', fontSize: '0.65rem', color: '#86efac' }}>✓</span>
-                    )}
+                      background: `linear-gradient(90deg, ${color}33, ${color}11)`,
+                      borderBottom: `1px solid ${color}33`,
+                      padding: '10px 14px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        {/* ISSA shield icon */}
+                        <div style={{
+                          width: '32px', height: '36px', position: 'relative',
+                          background: `linear-gradient(180deg, ${color}, ${color}99)`,
+                          clipPath: 'polygon(50% 0%, 100% 15%, 100% 65%, 50% 100%, 0% 65%, 0% 15%)',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          flexShrink: 0,
+                        }}>
+                          <span style={{ fontSize: '0.55rem', fontWeight: 900, color: '#000', letterSpacing: '-0.5px' }}>
+                            ISSA
+                          </span>
+                        </div>
+                        <div>
+                          <div style={{ fontSize: '0.6rem', color: `${color}99`, letterSpacing: '0.15em', fontWeight: 700 }}>
+                            ISSA CERTIFIED
+                          </div>
+                          <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#fff', letterSpacing: '0.04em' }}>
+                            {cert.replace('ISSA ', '')}
+                          </div>
+                        </div>
+                      </div>
+                      {isVerified && (
+                        <div style={{
+                          background: 'rgba(34,197,94,.15)',
+                          border: '1px solid rgba(34,197,94,.4)',
+                          borderRadius: '20px',
+                          padding: '3px 10px',
+                          fontSize: '0.65rem',
+                          fontWeight: 700,
+                          color: '#86efac',
+                          letterSpacing: '0.08em',
+                        }}>
+                          ✓ VERIFIED
+                        </div>
+                      )}
+                    </div>
+                    {/* Badge footer */}
+                    <div style={{
+                      padding: '8px 14px',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}>
+                      <span style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,.25)', letterSpacing: '0.08em' }}>
+                        INTERNATIONAL SPORTS SCIENCES ASSOCIATION
+                      </span>
+                      <div style={{
+                        width: '6px', height: '6px', borderRadius: '50%',
+                        background: color, boxShadow: `0 0 6px ${color}`,
+                      }} />
+                    </div>
                   </div>
                 );
               })}
-              <p style={{ margin: '8px 0 0', fontSize: '0.68rem', color: 'rgba(255,255,255,.25)', lineHeight: 1.5 }}>
-                To add certifications, update your ISSA Cert ID in your profile settings (comma-separated).
+              <p style={{ margin: '4px 0 0', fontSize: '0.68rem', color: 'rgba(255,255,255,.25)', lineHeight: 1.5 }}>
+                To add certifications, update your ISSA Cert ID field (comma-separated cert names).
               </p>
             </div>
           </div>

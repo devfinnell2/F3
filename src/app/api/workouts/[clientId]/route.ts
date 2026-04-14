@@ -72,18 +72,18 @@ export async function PUT(request: Request, { params }: RouteParams) {
 
     await connectDB();
 
+   // Allow trainers to update their own workout (self-plan) or their clients'
     const workout = await WorkoutModel.findOneAndUpdate(
-      { clientId, trainerId: session.user.id },
-      { $set: { plan } },
-      { new: true }
+      {
+        clientId,
+        $or: [
+          { trainerId: session.user.id },
+          { clientId:  session.user.id }, // self-workout
+        ],
+      },
+      { $set: { plan, trainerId: session.user.id } },
+      { new: true, upsert: true }
     );
-
-    if (!workout) {
-      return NextResponse.json(
-        { error: 'Workout not found.' },
-        { status: 404 }
-      );
-    }
 
     return NextResponse.json(
       { message: 'Plan updated.', workout },
@@ -92,6 +92,33 @@ export async function PUT(request: Request, { params }: RouteParams) {
 
   } catch (error) {
     console.error('[PUT /api/workouts/:clientId] error:', error);
+    return NextResponse.json({ error: 'Server error.' }, { status: 500 });
+  }
+}
+// ── DELETE ────────────────────────────────────
+export async function DELETE(_req: Request, { params }: RouteParams) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
+  }
+  if (session.user.role !== 'trainer' && session.user.role !== 'admin') {
+    return NextResponse.json({ error: 'Trainer access required.' }, { status: 403 });
+  }
+
+  const { clientId } = await params;
+
+  try {
+    await connectDB();
+    await WorkoutModel.findOneAndDelete({
+      clientId,
+      $or: [
+        { trainerId: session.user.id },
+        { clientId:  session.user.id },
+      ],
+    });
+    return NextResponse.json({ message: 'Workout deleted.' }, { status: 200 });
+  } catch (error) {
+    console.error('[DELETE /api/workouts/:clientId] error:', error);
     return NextResponse.json({ error: 'Server error.' }, { status: 500 });
   }
 }

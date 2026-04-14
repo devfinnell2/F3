@@ -61,18 +61,21 @@ export async function POST(request: Request) {
 
     await connectDB();
 
-    // ── Verify client belongs to this trainer ──
-    const client = await UserModel.findOne({
-      _id:       clientId,
-      trainerId: session.user.id,
-      role:      'client',
-    }).lean();
+   // ── Allow trainer to save their own workout (self-plan) ──
+    const isSelf = clientId === session.user.id;
 
-    if (!client) {
-      return NextResponse.json(
-        { error: 'Client not found or not assigned to you.' },
-        { status: 404 }
-      );
+    if (!isSelf) {
+      const client = await UserModel.findOne({
+        _id:       clientId,
+        trainerId: session.user.id,
+        role:      { $in: ['client', 'basic'] },
+      }).lean();
+      if (!client) {
+        return NextResponse.json(
+          { error: 'Client not found or not assigned to you.' },
+          { status: 404 }
+        );
+      }
     }
 
     // ── Upsert — replace plan if one exists ──

@@ -119,3 +119,50 @@ export async function POST(request: Request, { params }: RouteParams) {
     return NextResponse.json({ error: 'Server error.' }, { status: 500 });
   }
 }
+
+// ── PUT — update macro targets ────────────────
+export async function PUT(request: Request, { params }: RouteParams) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
+  }
+
+  const { clientId } = await params;
+
+  // Trainer can update any assigned client's targets, or their own
+  const isSelf    = clientId === session.user.id;
+  const isTrainer = session.user.role === 'trainer' || session.user.role === 'admin';
+
+  if (!isSelf && !isTrainer) {
+    return NextResponse.json({ error: 'Access denied.' }, { status: 403 });
+  }
+
+  try {
+    const { targetMacros } = await request.json() as {
+      targetMacros: { calories: number; protein: number; carbs: number; fats: number };
+    };
+
+    if (!targetMacros?.calories) {
+      return NextResponse.json({ error: 'targetMacros required.' }, { status: 400 });
+    }
+
+    await connectDB();
+
+    const mealPlan = await MealPlanModel.findOneAndUpdate(
+      { clientId },
+      {
+        $set: {
+          clientId,
+          trainerId: session.user.id,
+          targetMacros,
+        },
+      },
+      { upsert: true, new: true }
+    );
+
+    return NextResponse.json({ message: 'Targets updated.', mealPlan }, { status: 200 });
+  } catch (error) {
+    console.error('[PUT /api/meals/:clientId] error:', error);
+    return NextResponse.json({ error: 'Server error.' }, { status: 500 });
+  }
+}
