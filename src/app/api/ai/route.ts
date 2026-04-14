@@ -3,6 +3,7 @@
 //  POST /api/ai
 //  Trainer-only. Streams responses from Groq.
 // ─────────────────────────────────────────────
+import gemini from '@/lib/ai/gemini';
 import CalendarEventModel from '@/lib/db/models/CalendarEvent';
 import WorkoutModel    from '@/lib/db/models/Workout';
 import MealPlanModel   from '@/lib/db/models/MealPlan';
@@ -138,10 +139,10 @@ For update_profile: data must have only valid profile fields.
 Today's date: ${new Date().toISOString().split('T')[0]}
 Return ONLY the JSON object. No other text.`;
 
-        const extractionRes = await groq.chat.completions.create({
-          model:       GROQ_MODELS.fast,
+        const extractionRes = await gemini.chat.completions.create({
+          model:       'gemini-2.0-flash',
           temperature: 0.1,
-          max_tokens:  2048,
+          max_tokens:  4096,
           messages: [
             { role: 'system', content: 'You are a JSON extraction engine. Return only valid JSON. No prose. No markdown.' },
             { role: 'user',   content: extractionPrompt },
