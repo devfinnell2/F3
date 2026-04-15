@@ -149,20 +149,36 @@ For update_profile: data must have only valid profile fields.
 Today's date: ${new Date().toISOString().split('T')[0]}
 Return ONLY the JSON object. No other text.`;
 
-        const extractionRes = await gemini.chat.completions.create({
-          model:       'gemini-2.0-flash',
-          temperature: 0.1,
-          max_tokens:  4096,
-          messages: [
-            { role: 'system', content: 'You are a JSON extraction engine. Return only valid JSON. No prose. No markdown.' },
-            { role: 'user',   content: extractionPrompt },
-          ],
-        });
+        const extractionMessages = [
+          { role: 'system' as const, content: 'You are a JSON extraction engine. Return only valid JSON. No prose. No markdown.' },
+          { role: 'user'   as const, content: extractionPrompt },
+        ];
 
-        const rawJson = extractionRes.choices[0]?.message?.content
-          ?.replace(/```json|```/g, '').trim() ?? '';
+        let extractionContent = '';
+        for (const attempt of ['gemini', 'groq'] as const) {
+          try {
+            const client = attempt === 'gemini' ? gemini : groq;
+            const model  = attempt === 'gemini' ? 'gemini-2.0-flash' : GROQ_MODELS.fast;
+            const res    = await client.chat.completions.create({
+              model,
+              temperature: 0.1,
+              max_tokens:  attempt === 'gemini' ? 4096 : 2048,
+              messages:    extractionMessages,
+            });
+            extractionContent = res.choices[0]?.message?.content ?? '';
+            if (extractionContent) break;
+          } catch (e: any) {
+            console.warn(`[AI extraction] ${attempt} failed:`, e?.status ?? e?.message);
+          }
+        }
 
-        const action = JSON.parse(rawJson);
+        if (!extractionContent.trim()) {
+          actionResult = '⚠️ AI extraction unavailable — try again in a moment.';
+          return NextResponse.json({ output: cleanOutput, actionResult }, { status: 200 });
+        }
+
+        const rawJson = extractionContent.replace(/```json|```/g, '').trim();
+        const action  = JSON.parse(rawJson);
         const targetId = action.target === 'self'
           ? session.user.id
           : (clientId ?? session.user.id);
@@ -280,25 +296,7 @@ Return ONLY the JSON object. No other text.`;
           }
         }
 
-        if (action.action === 'update_meal_targets') {
-          const { calories, protein, carbs, fats } = action.data ?? {};
-          if (calories && protein && carbs && fats) {
-            await MealPlanModel.findOneAndUpdate(
-              { clientId: targetId },
-              {
-                $set: {
-                  clientId:     targetId,
-                  trainerId:    session.user.id,
-                  targetMacros: { calories, protein, carbs, fats },
-                },
-              },
-              { upsert: true, new: true }
-            );
-            actionResult = `✅ Macro targets saved — ${calories}kcal | P:${protein}g C:${carbs}g F:${fats}g`;
-          }
-        }
-
-      } catch (err) {
+       } catch (err) {
         console.error('[AI action parse error]', err);
         actionResult = '⚠️ Action detected but could not be executed.';
       }
