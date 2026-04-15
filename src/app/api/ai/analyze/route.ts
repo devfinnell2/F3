@@ -7,26 +7,32 @@ import WorkoutModel                  from '@/lib/db/models/Workout';
 import MealPlanModel                 from '@/lib/db/models/MealPlan';
 import AIProposalModel               from '@/lib/db/models/AIProposal';
 import UserModel                     from '@/lib/db/models/User';
+import groq, { GROQ_MODELS } from '@/lib/ai/groq';
+import gemini               from '@/lib/ai/gemini';
 
-// ── Groq AI client (same as Phase 2) ────────────────────────────────────────
-async function callGroq(systemPrompt: string, userPrompt: string): Promise<string> {
-  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-    method:  'POST',
-    headers: {
-      'Content-Type':  'application/json',
-      Authorization:   `Bearer ${process.env.GROQ_API_KEY}`,
-    },
-    body: JSON.stringify({
-      model:       'llama3-70b-8192',
+async function callAI(systemPrompt: string, userPrompt: string): Promise<string> {
+  const messages = [
+    { role: 'system' as const, content: systemPrompt },
+    { role: 'user'   as const, content: userPrompt   },
+  ];
+  try {
+    const res = await gemini.chat.completions.create({
+      model:       'gemini-2.0-flash',
       temperature: 0.4,
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user',   content: userPrompt   },
-      ],
-    }),
-  });
-  const data = await res.json();
-  return data.choices?.[0]?.message?.content ?? '';
+      max_tokens:  1024,
+      messages,
+    });
+    return res.choices?.[0]?.message?.content ?? '';
+  } catch {
+    // Fallback to Groq
+    const res = await groq.chat.completions.create({
+      model:       GROQ_MODELS.fast,
+      temperature: 0.4,
+      max_tokens:  1024,
+      messages,
+    });
+    return res.choices?.[0]?.message?.content ?? '';
+  }
 }
 
 export async function POST(req: NextRequest) {
@@ -112,7 +118,7 @@ Be kind, direct, and focused on health — never body-shame.`;
     const userPrompt = `Client snapshot:\n${JSON.stringify(snapshot, null, 2)}`;
 
     try {
-      const raw    = await callGroq(systemPrompt, userPrompt);
+      const raw    = await callAI(systemPrompt, userPrompt);
       const clean  = raw.replace(/```json|```/g, '').trim();
       const parsed = JSON.parse(clean);
 

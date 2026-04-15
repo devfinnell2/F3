@@ -6,6 +6,7 @@ import UserModel             from '@/lib/db/models/User';
 import ClientProfileModel    from '@/lib/db/models/ClientProfile';
 import WorkoutModel          from '@/lib/db/models/Workout';
 import TrainerSidebar        from '@/components/trainer/TrainerSidebar';
+import TodaysMeals from '@/components/shared/TodaysMeals';
 
 const CERT_COLORS: Record<string, string> = {
   'ISSA CPT':           '#a855f7',
@@ -323,6 +324,22 @@ export default async function TrainerStatusPage() {
                 </a>
               </div>
             )}
+          </div>
+{/* ── Today's meals ── */}
+          <div className="lg:col-span-2 rounded-lg p-4"
+            style={{ background: 'rgba(0,255,200,.03)', border: '1px solid rgba(0,255,200,.1)' }}>
+            <div className="flex justify-between items-center mb-3">
+              <div className="text-xs tracking-widest" style={{ color: 'rgba(0,255,200,.5)' }}>
+                TODAY'S NUTRITION
+              </div>
+              <a href="/dashboard/trainer/profile/meals" style={{
+                fontSize: '0.68rem', fontWeight: 700, color: '#6ee7c8',
+                textDecoration: 'none', letterSpacing: '0.08em',
+              }}>
+                LOG MEALS →
+              </a>
+            </div>
+            <TodaysMeals clientId={session.user.id} accentColor="#00ffc8" />
           </div>
 
         </div>

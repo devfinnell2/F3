@@ -83,13 +83,23 @@ export async function POST(request: Request) {
       conversationHistory,
     });
 
-    // ── Call Groq ───────────────────────────────
-    const completion = await groq.chat.completions.create({
-      model:       GROQ_MODELS.coach,
-      messages,
-      temperature: 0.7,
-      max_tokens:  4096,
-    });
+   let completion;
+    try {
+      completion = await gemini.chat.completions.create({
+        model:       'gemini-2.0-flash',
+        messages,
+        temperature: 0.7,
+        max_tokens:  2048,
+      });
+    } catch {
+      // Fallback to Groq if Gemini fails
+      completion = await groq.chat.completions.create({
+        model:       GROQ_MODELS.coach,
+        messages,
+        temperature: 0.7,
+        max_tokens:  2048,
+      });
+    }
 
     const output = completion.choices[0]?.message?.content ?? '';
 
