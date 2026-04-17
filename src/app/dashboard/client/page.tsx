@@ -143,7 +143,7 @@ export default async function ClientDashboard() {
             className="text-xs tracking-widest mb-3"
             style={{ color: 'rgba(0,255,200,.48)' }}
           >
-            MY LEVEL — RPG STATS
+            MY LEVEL — STATS
           </div>
 
           <div className="flex items-center gap-4 mb-4">
