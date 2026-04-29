@@ -124,17 +124,33 @@ export default function ClientSidebar({
               <Link
                 key={item.id}
                 href={item.href}
-                className="flex items-center gap-2 px-3 py-2 rounded-r transition-all text-sm tracking-wide uppercase"
+                className="flex items-center gap-2 px-3 py-2 rounded-r text-sm tracking-wide uppercase"
                 style={{
-                  color: isActive ? '#e9d5ff' : 'rgba(192,132,252,.42)',
-                  background: isActive ? 'rgba(0,255,200,.08)' : 'transparent',
-                  borderLeft: isActive ? '2px solid #00ffc8' : '2px solid transparent',
+                  position: 'relative',
+                  overflow: 'hidden',
                   textDecoration: 'none',
+                  transition: 'all .18s ease',
+                  color: isActive ? '#ffffff' : 'rgba(110,231,200,.42)',
+                  background: isActive
+                    ? 'linear-gradient(90deg, rgba(0,255,200,.28) 0%, rgba(0,255,200,.08) 60%, transparent 100%)'
+                    : 'transparent',
+                  borderLeft: isActive ? '2px solid #00ffc8' : '2px solid transparent',
+                  boxShadow: isActive
+                    ? 'inset 0 0 14px rgba(0,255,200,.3), -2px 0 12px rgba(0,255,200,.6), -4px 0 22px rgba(0,255,200,.35)'
+                    : 'none',
+                  textShadow: isActive
+                    ? '0 0 8px rgba(110,231,200,.9), 0 0 18px rgba(0,255,200,.6)'
+                    : 'none',
                 }}
               >
                 <span
-                  className="w-1 h-1 rotate-45 shrink-0"
-                  style={{ border: '1px solid currentColor' }}
+                  className="w-1.5 h-1.5 rotate-45 shrink-0"
+                  style={{
+                    border: '1px solid currentColor',
+                    background: isActive ? '#00ffc8' : 'transparent',
+                    boxShadow: isActive ? '0 0 6px #00ffc8, 0 0 12px rgba(0,255,200,.9)' : 'none',
+                    transition: 'all .18s ease',
+                  }}
                 />
                 {item.label}
                 {item.id === 'messages' && <UnreadBadge />}

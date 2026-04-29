@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import LiquidGlassButton from '@/components/ui/LiquidGlassButton';
 
 const FORMULAS = [
   { name: 'Epley',   fn: (w: number, r: number) => r === 1 ? w : w * (1 + r / 30) },
@@ -58,17 +59,9 @@ export default function OneRMCalculator({ accentColor = '#a855f7' }: { accentCol
           </div>
         </div>
 
-        <button onClick={calculate} style={{
-          padding: '12px', borderRadius: '8px', border: `1px solid ${accentColor}55`,
-          background: `${accentColor}18`, color: accentColor, fontWeight: 700,
-          fontSize: '0.85rem', letterSpacing: '0.1em', cursor: 'pointer',
-          fontFamily: 'Courier New, monospace', transition: 'all 0.2s',
-        }}
-        onMouseEnter={e => (e.currentTarget.style.background = `${accentColor}2e`)}
-        onMouseLeave={e => (e.currentTarget.style.background = `${accentColor}18`)}
-        >
+       <LiquidGlassButton onClick={calculate} variant="primary" size="md" fullWidth>
           CALCULATE 1RM
-        </button>
+        </LiquidGlassButton>
       </div>
 
       {results && (

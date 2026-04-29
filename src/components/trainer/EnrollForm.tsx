@@ -4,6 +4,7 @@
 
 'use client';
 
+import LiquidGlassButton from '@/components/ui/LiquidGlassButton';
 import { useState }  from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -320,20 +321,15 @@ export default function EnrollForm() {
       )}
 
       {/* Submit */}
-      <button
+      <LiquidGlassButton
         type="submit"
         disabled={loading}
-        className="w-full py-3 font-bold tracking-widest rounded transition-all"
-        style={{
-          background: loading ? 'rgba(168,85,247,.06)' : 'rgba(168,85,247,.15)',
-          border:     '1px solid rgba(168,85,247,.4)',
-          color:      loading ? 'rgba(192,132,252,.35)' : '#e9d5ff',
-          cursor:     loading ? 'not-allowed' : 'pointer',
-          fontFamily: 'Courier New, monospace',
-        }}
+        variant="primary"
+        size="md"
+        fullWidth
       >
         {loading ? 'ENROLLING...' : 'ENROLL CLIENT →'}
-      </button>
+      </LiquidGlassButton>
     </form>
   );
 }

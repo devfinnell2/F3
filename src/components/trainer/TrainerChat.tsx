@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
+import GlitchButton from '@/components/ui/GlitchButton';
 
 interface Conversation {
   userId:         string;
@@ -261,20 +262,19 @@ export default function TrainerChat({ myId }: { myId: string }) {
                     justifyContent: isMine ? 'flex-end' : 'flex-start',
                   }}>
                     <div style={{
-                      maxWidth:     '65%',
-                      padding:      '9px 13px',
-                      borderRadius: isMine ? '14px 14px 4px 14px' : '14px 14px 14px 4px',
-                      // Trainer sent = purple, received from client = cyan
+                      maxWidth:     '78%',
+                      padding:      '10px 13px',
+                      borderRadius: '8px',
                       background:   isMine
-                        ? 'linear-gradient(135deg,#7c3aed,#a855f7)'
-                        : 'rgba(6,182,212,.15)',
-                      border:       isMine
-                        ? 'none'
-                        : '1px solid rgba(6,182,212,.35)',
-                      color:        '#e9d5ff',
-                      fontSize:     '0.85rem',
-                      lineHeight:   1.55,
-                      wordBreak:    'break-word',
+                        ? 'rgba(168,85,247,.12)'
+                        : 'rgba(0,255,200,.05)',
+                      border: isMine
+                        ? '1px solid rgba(168,85,247,.25)'
+                        : '1px solid rgba(0,255,200,.15)',
+                      color:      isMine ? '#ddd6fe' : '#a7f3d0',
+                      fontSize:   '0.88rem',
+                      lineHeight: 1.6,
+                      wordBreak:  'break-word',
                     }}>
                       <p style={{ margin: 0 }}>{msg.message}</p>
                       <p style={{
@@ -318,28 +318,15 @@ export default function TrainerChat({ myId }: { myId: string }) {
                   fontFamily:  'Courier New, monospace',
                 }}
               />
-              <button
+              <GlitchButton
                 onClick={sendMessage}
                 disabled={!input.trim() || sending}
-                style={{
-                  padding:      '9px 18px',
-                  borderRadius: '8px',
-                  border:       '1px solid rgba(168,85,247,.4)',
-                  background:   input.trim()
-                    ? 'linear-gradient(135deg,#7c3aed,#a855f7)'
-                    : 'rgba(168,85,247,.06)',
-                  color:        input.trim() ? '#fff' : 'rgba(192,132,252,.35)',
-                  fontWeight:   700,
-                  fontSize:     '0.8rem',
-                  cursor:       input.trim() ? 'pointer' : 'not-allowed',
-                  letterSpacing:'0.08em',
-                  fontFamily:   'Courier New, monospace',
-                  alignSelf:    'flex-end',
-                  transition:   'all 0.2s',
-                }}
+                variant="primary"
+                size="sm"
+                style={{ alignSelf: 'flex-end' }}
               >
                 {sending ? '...' : 'SEND ↑'}
-              </button>
+              </GlitchButton>
             </div>
           </>
         )}

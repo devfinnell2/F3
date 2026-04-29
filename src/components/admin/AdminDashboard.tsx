@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { signOut } from 'next-auth/react';
+import LiquidGlassButton from '@/components/ui/LiquidGlassButton';
 
 interface User {
   _id:          string;
@@ -137,14 +138,7 @@ export default function AdminDashboard({ adminName }: { adminName: string }) {
           <span style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,.35)' }}>
             {adminName.toUpperCase()}
           </span>
-          <button onClick={() => signOut({ callbackUrl: '/login' })} style={{
-            background: 'transparent', border: '1px solid rgba(244,114,182,.3)',
-            color: '#f472b6', borderRadius: '6px', padding: '4px 12px',
-            fontSize: '0.72rem', cursor: 'pointer', fontFamily: 'Courier New, monospace',
-            letterSpacing: '0.08em',
-          }}>
-            SIGN OUT
-          </button>
+          <LiquidGlassButton onClick={() => signOut({ callbackUrl: '/login' })} variant="admin" size="sm">SIGN OUT</LiquidGlassButton>
         </div>
       </div>
 
@@ -157,21 +151,9 @@ export default function AdminDashboard({ adminName }: { adminName: string }) {
             { id: 'users',    label: 'ALL USERS'       },
             { id: 'pending',  label: `PENDING APPROVAL${stats?.pendingTrainers ? ` (${stats.pendingTrainers})` : ''}` },
           ] as const).map(t => (
-            <button key={t.id} onClick={() => setTab(t.id)} style={{
-              padding:      '8px 18px',
-              borderRadius: '8px',
-              border:       `1px solid ${tab === t.id ? 'rgba(244,114,182,.5)' : 'rgba(255,255,255,.08)'}`,
-              background:   tab === t.id ? 'rgba(244,114,182,.12)' : 'transparent',
-              color:        tab === t.id ? '#f472b6' : 'rgba(255,255,255,.35)',
-              fontSize:     '0.72rem',
-              fontWeight:   700,
-              letterSpacing:'0.1em',
-              cursor:       'pointer',
-              fontFamily:   'Courier New, monospace',
-              transition:   'all 0.15s',
-            }}>
+           <LiquidGlassButton key={t.id} onClick={() => setTab(t.id)} variant={tab === t.id ? 'admin' : 'ghost'} size="sm">
               {t.label}
-            </button>
+            </LiquidGlassButton>
           ))}
         </div>
 
@@ -386,51 +368,27 @@ export default function AdminDashboard({ adminName }: { adminName: string }) {
                       <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                         {/* Status toggle */}
                         {user.status === 'active' ? (
-                          <button onClick={() => updateUser(user._id, { status: 'suspended' })}
-                            disabled={updating === user._id}
-                            style={actionBtn('#ef4444')}>
-                            SUSPEND
-                          </button>
+                         <LiquidGlassButton onClick={() => updateUser(user._id, { status: 'suspended' })} disabled={updating === user._id} variant="admin" size="sm">SUSPEND</LiquidGlassButton>
                         ) : user.status === 'suspended' ? (
-                          <button onClick={() => updateUser(user._id, { status: 'active' })}
-                            disabled={updating === user._id}
-                            style={actionBtn('#22c55e')}>
-                            RESTORE
-                          </button>
+                          <LiquidGlassButton onClick={() => updateUser(user._id, { status: 'active' })} disabled={updating === user._id} variant="client" size="sm">RESTORE</LiquidGlassButton>
                         ) : user.status === 'pending' ? (
-                          <button onClick={() => updateUser(user._id, { status: 'active', issaVerified: true })}
-                            disabled={updating === user._id}
-                            style={actionBtn('#22c55e')}>
-                            APPROVE
-                          </button>
+                          <LiquidGlassButton onClick={() => updateUser(user._id, { status: 'active', issaVerified: true })} disabled={updating === user._id} variant="client" size="sm">APPROVE</LiquidGlassButton>
                         ) : null}
 
                         {/* Tier toggle for trainers */}
                         {user.role === 'trainer' && (
-                          <button
-                            onClick={() => updateUser(user._id, { tier: user.tier === 'elite' ? 'pro' : 'elite' })}
-                            disabled={updating === user._id}
-                            style={actionBtn('#fbbf24')}
-                          >
+                         <LiquidGlassButton onClick={() => updateUser(user._id, { tier: user.tier === 'elite' ? 'pro' : 'elite' })} disabled={updating === user._id} variant="warning" size="sm">
                             {user.tier === 'elite' ? '→ PRO' : '→ ELITE'}
-                          </button>
+                          </LiquidGlassButton>
                         )}
 
                         {/* ISSA verify for trainers */}
                         {user.role === 'trainer' && !user.issaVerified && (
-                          <button onClick={() => updateUser(user._id, { issaVerified: true })}
-                            disabled={updating === user._id}
-                            style={actionBtn('#a855f7')}>
-                            VERIFY ISSA
-                          </button>
+                          <LiquidGlassButton onClick={() => updateUser(user._id, { issaVerified: true })} disabled={updating === user._id} variant="primary" size="sm">VERIFY ISSA</LiquidGlassButton>
                         )}
 
                         {/* Delete */}
-                        <button onClick={() => deleteUser(user._id, user.name)}
-                          disabled={updating === user._id}
-                          style={actionBtn('#6b7280')}>
-                          DELETE
-                        </button>
+                        <LiquidGlassButton onClick={() => deleteUser(user._id, user.name)} disabled={updating === user._id} variant="ghost" size="sm">DELETE</LiquidGlassButton>
                       </div>
                     )}
                   </div>
@@ -482,30 +440,8 @@ export default function AdminDashboard({ adminName }: { adminName: string }) {
                     </p>
                   </div>
                   <div style={{ display: 'flex', gap: '8px' }}>
-                    <button
-                      onClick={() => updateUser(user._id, { status: 'active', issaVerified: true })}
-                      disabled={updating === user._id}
-                      style={{
-                        padding: '10px 20px', borderRadius: '8px', fontWeight: 700,
-                        fontSize: '0.78rem', letterSpacing: '0.1em', cursor: 'pointer',
-                        fontFamily: 'Courier New, monospace', border: '1px solid rgba(34,197,94,.5)',
-                        background: 'rgba(34,197,94,.15)', color: '#86efac', transition: 'all 0.2s',
-                      }}
-                    >
-                      ✓ APPROVE + VERIFY
-                    </button>
-                    <button
-                      onClick={() => updateUser(user._id, { status: 'suspended' })}
-                      disabled={updating === user._id}
-                      style={{
-                        padding: '10px 20px', borderRadius: '8px', fontWeight: 700,
-                        fontSize: '0.78rem', letterSpacing: '0.1em', cursor: 'pointer',
-                        fontFamily: 'Courier New, monospace', border: '1px solid rgba(239,68,68,.4)',
-                        background: 'rgba(239,68,68,.1)', color: '#fca5a5', transition: 'all 0.2s',
-                      }}
-                    >
-                      ✕ REJECT
-                    </button>
+                 <LiquidGlassButton onClick={() => updateUser(user._id, { status: 'active', issaVerified: true })} disabled={updating === user._id} variant="client" size="md">✓ APPROVE + VERIFY</LiquidGlassButton>
+                   <LiquidGlassButton onClick={() => updateUser(user._id, { status: 'suspended' })} disabled={updating === user._id} variant="admin" size="md">✕ REJECT</LiquidGlassButton>
                   </div>
                 </div>
               </div>

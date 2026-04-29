@@ -8,37 +8,38 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import GlitchButton from '@/components/ui/GlitchButton';
 
 interface Client {
-  id:             string;
-  name:           string;
+  id: string;
+  name: string;
   avatarInitials: string;
 }
 
 interface Message {
-  role:         'user' | 'assistant';
-  content:      string;
-  time:         string;
+  role: 'user' | 'assistant';
+  content: string;
+  time: string;
   actionResult?: string;
 }
 
 interface AICoachProps {
-  clients:     Client[];
+  clients: Client[];
   trainerTier: string;
 }
 
 const QUICK_ACTIONS = [
-  { label: 'EXP breakdown',    prompt: 'Give me a full EXP and level breakdown for this client.'                         },
-  { label: 'Fix macros',       prompt: 'Analyze this client\'s macros and suggest corrections for remaining meals today.' },
-  { label: 'Predict level',    prompt: 'Predict when this client will hit their goal level based on current progress.'    },
-  { label: 'Suggest recipe',   prompt: 'Suggest a high-protein recipe to help this client hit their protein target.'      },
-  { label: 'Check recovery',   prompt: 'Evaluate this client\'s recovery based on their Vitality HP and suggest improvements.' },
-  { label: 'Plateau fix',      prompt: 'This client appears to be plateauing. What adjustments should I make?'            },
+  { label: 'EXP breakdown', prompt: 'Give me a full EXP and level breakdown for this client.' },
+  { label: 'Fix macros', prompt: 'Analyze this client\'s macros and suggest corrections for remaining meals today.' },
+  { label: 'Predict level', prompt: 'Predict when this client will hit their goal level based on current progress.' },
+  { label: 'Suggest recipe', prompt: 'Suggest a high-protein recipe to help this client hit their protein target.' },
+  { label: 'Check recovery', prompt: 'Evaluate this client\'s recovery based on their Vitality HP and suggest improvements.' },
+  { label: 'Plateau fix', prompt: 'This client appears to be plateauing. What adjustments should I make?' },
 ];
 
 function formatTime(): string {
   return new Date().toLocaleTimeString('en-US', {
-    hour:   '2-digit',
+    hour: '2-digit',
     minute: '2-digit',
   });
 }
@@ -47,14 +48,14 @@ export default function AICoach({ clients, trainerTier }: AICoachProps) {
   const [selectedClientId, setSelectedClientId] = useState<string>(
     clients[0]?.id ?? ''
   );
-  const [messages,  setMessages ] = useState<Message[]>([]);
-  const [input,     setInput    ] = useState('');
-  const [loading,   setLoading  ] = useState(false);
-  const [error,     setError    ] = useState('');
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const selectedClient = clients.find(c => c.id === selectedClientId);
-  const isElite        = trainerTier === 'elite';
+  const isElite = trainerTier === 'elite';
 
   // Auto-scroll on new messages
   useEffect(() => {
@@ -65,7 +66,7 @@ export default function AICoach({ clients, trainerTier }: AICoachProps) {
   useEffect(() => {
     setMessages([
       {
-        role:    'assistant',
+        role: 'assistant',
         content: `F3 AI Coach online. ISSA methodology loaded.\n\n${clients.length > 0 ? `I can see ${clients.length} client${clients.length > 1 ? 's' : ''} assigned to you. Select a client above for context-aware recommendations, or ask me anything.` : 'No clients assigned yet. Enroll clients to get context-aware AI recommendations.'}`,
         time: formatTime(),
       },
@@ -80,9 +81,9 @@ export default function AICoach({ clients, trainerTier }: AICoachProps) {
     setError('');
 
     const userMsg: Message = {
-      role:    'user',
+      role: 'user',
       content: text,
-      time:    formatTime(),
+      time: formatTime(),
     };
 
     setMessages(prev => [...prev, userMsg]);
@@ -95,11 +96,11 @@ export default function AICoach({ clients, trainerTier }: AICoachProps) {
         .map(m => ({ role: m.role, content: m.content }));
 
       const res = await fetch('/api/ai', {
-        method:  'POST',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({
-          message:             text,
-          clientId:            selectedClientId || undefined,
+        body: JSON.stringify({
+          message: text,
+          clientId: selectedClientId || undefined,
           conversationHistory: history,
         }),
       });
@@ -112,9 +113,9 @@ export default function AICoach({ clients, trainerTier }: AICoachProps) {
       }
 
       const aiMsg: Message = {
-        role:         'assistant',
-        content:      data.output,
-        time:         formatTime(),
+        role: 'assistant',
+        content: data.output,
+        time: formatTime(),
         actionResult: data.actionResult ?? undefined,
       };
       setMessages(prev => [...prev, aiMsg]);
@@ -167,8 +168,8 @@ export default function AICoach({ clients, trainerTier }: AICoachProps) {
             className="text-xs font-bold px-3 py-1 rounded"
             style={{
               background: 'rgba(251,191,36,.1)',
-              border:     '1px solid rgba(251,191,36,.28)',
-              color:      '#fbbf24',
+              border: '1px solid rgba(251,191,36,.28)',
+              color: '#fbbf24',
             }}
           >
             ELITE — UNLIMITED AI
@@ -178,8 +179,8 @@ export default function AICoach({ clients, trainerTier }: AICoachProps) {
             className="text-xs font-bold px-3 py-1 rounded"
             style={{
               background: 'rgba(168,85,247,.1)',
-              border:     '1px solid rgba(168,85,247,.28)',
-              color:      '#d8b4fe',
+              border: '1px solid rgba(168,85,247,.28)',
+              color: '#d8b4fe',
             }}
           >
             PRO — LIMITED AI
@@ -192,14 +193,14 @@ export default function AICoach({ clients, trainerTier }: AICoachProps) {
             value={selectedClientId}
             onChange={e => setSelectedClientId(e.target.value)}
             style={{
-              background:   'rgba(0,0,0,.45)',
-              border:       '1px solid rgba(168,85,247,.3)',
-              color:        '#e0d8ff',
-              fontFamily:   'Courier New, monospace',
-              fontSize:     '13px',
-              padding:      '6px 10px',
+              background: 'rgba(0,0,0,.45)',
+              border: '1px solid rgba(168,85,247,.3)',
+              color: '#e0d8ff',
+              fontFamily: 'Courier New, monospace',
+              fontSize: '13px',
+              padding: '6px 10px',
               borderRadius: '4px',
-              outline:      'none',
+              outline: 'none',
             }}
           >
             <option value="">No client selected</option>
@@ -224,13 +225,13 @@ export default function AICoach({ clients, trainerTier }: AICoachProps) {
           >
             <div
               style={{
-                maxWidth:     '80%',
-                padding:      '10px 14px',
+                maxWidth: '80%',
+                padding: '10px 14px',
                 borderRadius: '8px',
-                fontSize:     '15px',
-                lineHeight:   '1.6',
-                whiteSpace:   'pre-wrap',
-                background:   msg.role === 'user'
+                fontSize: '15px',
+                lineHeight: '1.6',
+                whiteSpace: 'pre-wrap',
+                background: msg.role === 'user'
                   ? 'rgba(168,85,247,.12)'
                   : 'rgba(0,255,200,.05)',
                 border: msg.role === 'user'
@@ -242,17 +243,17 @@ export default function AICoach({ clients, trainerTier }: AICoachProps) {
               {msg.content}
               {msg.actionResult && (
                 <div style={{
-                  marginTop:    '10px',
-                  padding:      '8px 10px',
+                  marginTop: '10px',
+                  padding: '8px 10px',
                   borderRadius: '6px',
-                  background:   msg.actionResult.startsWith('✅')
+                  background: msg.actionResult.startsWith('✅')
                     ? 'rgba(34,197,94,.1)' : 'rgba(251,191,36,.1)',
-                  border:       msg.actionResult.startsWith('✅')
+                  border: msg.actionResult.startsWith('✅')
                     ? '1px solid rgba(34,197,94,.3)' : '1px solid rgba(251,191,36,.3)',
-                  color:        msg.actionResult.startsWith('✅') ? '#86efac' : '#fcd34d',
-                  fontSize:     '0.78rem',
-                  fontWeight:   700,
-                  letterSpacing:'0.05em',
+                  color: msg.actionResult.startsWith('✅') ? '#86efac' : '#fcd34d',
+                  fontSize: '0.78rem',
+                  fontWeight: 700,
+                  letterSpacing: '0.05em',
                 }}>
                   {msg.actionResult}
                 </div>
@@ -272,12 +273,12 @@ export default function AICoach({ clients, trainerTier }: AICoachProps) {
           <div className="flex justify-start mb-4">
             <div
               style={{
-                padding:      '10px 14px',
+                padding: '10px 14px',
                 borderRadius: '8px',
-                background:   'rgba(0,255,200,.05)',
-                border:       '1px solid rgba(0,255,200,.15)',
-                color:        'rgba(0,255,200,.5)',
-                fontSize:     '15px',
+                background: 'rgba(0,255,200,.05)',
+                border: '1px solid rgba(0,255,200,.15)',
+                color: 'rgba(0,255,200,.5)',
+                fontSize: '15px',
               }}
             >
               F3 AI thinking...
@@ -291,8 +292,8 @@ export default function AICoach({ clients, trainerTier }: AICoachProps) {
             className="text-sm px-4 py-2 rounded mb-4"
             style={{
               background: 'rgba(244,114,182,.08)',
-              border:     '1px solid rgba(244,114,182,.25)',
-              color:      '#f472b6',
+              border: '1px solid rgba(244,114,182,.25)',
+              color: '#f472b6',
             }}
           >
             {error}
@@ -308,21 +309,15 @@ export default function AICoach({ clients, trainerTier }: AICoachProps) {
         style={{ borderTop: '1px solid rgba(168,85,247,.08)' }}
       >
         {QUICK_ACTIONS.map(action => (
-          <button
+          <GlitchButton
             key={action.label}
             onClick={() => sendMessage(action.prompt)}
             disabled={loading}
-            className="text-xs font-bold tracking-wide px-3 py-1.5 rounded transition-all"
-            style={{
-              background: 'rgba(168,85,247,.07)',
-              border:     '1px solid rgba(168,85,247,.28)',
-              color:      'rgba(192,132,252,.7)',
-              cursor:     loading ? 'not-allowed' : 'pointer',
-              fontFamily: 'Courier New, monospace',
-            }}
+            variant="ghost"
+            size="sm"
           >
             {action.label}
-          </button>
+          </GlitchButton>
         ))}
       </div>
 
@@ -333,42 +328,31 @@ export default function AICoach({ clients, trainerTier }: AICoachProps) {
       >
         <textarea
           value={input}
-          onChange={e  => setInput(e.target.value)}
+          onChange={e => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={`Query F3 AI${selectedClient ? ` about ${selectedClient.name.toUpperCase()}` : ''} — client, protocol, or plan...`}
           rows={2}
           style={{
-            flex:         1,
-            background:   'rgba(0,0,0,.45)',
-            border:       '1px solid rgba(168,85,247,.25)',
-            color:        '#e0d8ff',
-            fontFamily:   'Courier New, monospace',
-            fontSize:     '15px',
-            padding:      '10px 12px',
+            flex: 1,
+            background: 'rgba(0,0,0,.45)',
+            border: '1px solid rgba(168,85,247,.25)',
+            color: '#e0d8ff',
+            fontFamily: 'Courier New, monospace',
+            fontSize: '15px',
+            padding: '10px 12px',
             borderRadius: '6px',
-            outline:      'none',
-            resize:       'none',
+            outline: 'none',
+            resize: 'none',
           }}
         />
-        <button
+        <GlitchButton
           onClick={() => sendMessage()}
           disabled={loading || !input.trim()}
-          className="px-5 font-bold tracking-widest rounded transition-all shrink-0"
-          style={{
-            background: loading || !input.trim()
-              ? 'rgba(168,85,247,.06)'
-              : 'rgba(168,85,247,.15)',
-            border:     '1px solid rgba(168,85,247,.4)',
-            color:      loading || !input.trim()
-              ? 'rgba(192,132,252,.3)'
-              : '#e9d5ff',
-            cursor:     loading || !input.trim() ? 'not-allowed' : 'pointer',
-            fontFamily: 'Courier New, monospace',
-            fontSize:   '13px',
-          }}
+          variant="primary"
+          size="md"
         >
           SEND →
-        </button>
+        </GlitchButton>
       </div>
     </div>
   );

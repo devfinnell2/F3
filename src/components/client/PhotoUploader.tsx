@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import LiquidGlassButton from '@/components/ui/LiquidGlassButton';
 
 interface Photos {
   before: string | null;
@@ -190,29 +191,16 @@ export default function PhotoUploader({ photos: initial }: { photos: Photos }) {
               />
 
               {/* Upload button below photo */}
-              <button
+              <LiquidGlassButton
                 onClick={() => !isUploading && (type === 'before' ? beforeRef : afterRef).current?.click()}
                 disabled={isUploading}
-                style={{
-                  marginTop: '10px',
-                  width: '100%',
-                  padding: '8px',
-                  borderRadius: '8px',
-                  border: `1px solid ${accent}44`,
-                  background: `${accent}0a`,
-                  color: accent,
-                  fontSize: '0.75rem',
-                  fontWeight: 700,
-                  letterSpacing: '0.1em',
-                  cursor: isUploading ? 'not-allowed' : 'pointer',
-                  fontFamily: 'Courier New, monospace',
-                  transition: 'all 0.2s',
-                }}
-                onMouseEnter={e => !isUploading && ((e.target as HTMLButtonElement).style.background = `${accent}1a`)}
-                onMouseLeave={e => ((e.target as HTMLButtonElement).style.background = `${accent}0a`)}
+                variant="primary"
+                size="sm"
+                fullWidth
+                style={{ marginTop: '10px' }}
               >
                 {isUploading ? 'UPLOADING...' : url ? `REPLACE ${label}` : `+ UPLOAD ${label}`}
-              </button>
+              </LiquidGlassButton>
             </div>
           );
         })}

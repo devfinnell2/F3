@@ -1,26 +1,144 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --font-chakra:   'Chakra Petch', 'Courier New', monospace;
+  --font-mono:     'JetBrains Mono', 'Courier New', monospace;
+
+  /* F3 Color tokens */
+  --bg-body:       #0a0a12;
+  --c-purple:      #a855f7;
+  --c-purple-dim:  rgba(168,85,247,.18);
+  --c-cyan:        #00ffc8;
+  --c-cyan-dim:    rgba(0,255,200,.12);
+  --c-pink:        #f472b6;
+  --c-yellow:      #fbbf24;
+  --c-text:        #e9d5ff;
+ --c-muted:       rgba(255,255,255,.32);
+
+  /* ── Surfaces ── */
+  --surface-1:     rgba(255,255,255,.025);
+  --surface-2:     rgba(255,255,255,.045);
+  --surface-3:     rgba(255,255,255,.07);
+
+  /* ── Borders ── */
+  --border-purple: rgba(168,85,247,.14);
+  --border-purple-mid: rgba(168,85,247,.28);
+  --border-purple-bright: rgba(168,85,247,.5);
+  --border-cyan:   rgba(0,255,200,.18);
+  --border-cyan-bright: rgba(0,255,200,.4);
+  --border-pink:   rgba(244,114,182,.22);
+
+  /* ── Glows ── */
+  --glow-purple:   0 0 18px rgba(168,85,247,.45), 0 0 36px rgba(168,85,247,.2);
+  --glow-cyan:     0 0 18px rgba(0,255,200,.4),   0 0 36px rgba(0,255,200,.18);
+  --glow-pink:     0 0 18px rgba(244,114,182,.4),  0 0 36px rgba(244,114,182,.18);
+
+  /* ── Trainer vs Client role colors ── */
+  --role-trainer:  #a855f7;
+  --role-client:   #00ffc8;
+
+  /* ── Stat colors ── */
+  --stat-will:      #c084fc;
+  --stat-strength:  #00ffc8;
+  --stat-vitality:  #f472b6;
+  --stat-endurance: #38bdf8;
+  --stat-skill:     #fbbf24;
+  --stat-recovery:  #a855f7;
+
+  /* ── Gradients ── */
+  --grad-trainer:  linear-gradient(135deg, #6d28d9, #a855f7);
+  --grad-client:   linear-gradient(135deg, #0ea5e9, #00ffc8);
+  --grad-danger:   linear-gradient(135deg, #be123c, #f43f5e);
+  --grad-gold:     linear-gradient(135deg, #b45309, #fbbf24);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html, body {
+  margin:     0;
+  padding:    0;
+  background: var(--bg-body);
+  color:      var(--c-text);
+  min-height: 100vh;
 }
 
+/* ── Typography ── */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-chakra);
+  font-size:   15px;
+  line-height: 1.6;
 }
+
+/* Data/numbers always use mono */
+code, pre, kbd,
+.font-mono,
+[data-mono] {
+  font-family: var(--font-mono);
+}
+
+/* Headings use Chakra Petch */
+h1, h2, h3, h4, h5, h6 {
+  font-family:    var(--font-chakra);
+  font-weight:    700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color:          var(--c-text);
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar       { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(168,85,247,.3); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(168,85,247,.55); }
+
+/* ── Focus ring ── */
+:focus-visible {
+  outline:        2px solid rgba(168,85,247,.55);
+  outline-offset: 2px;
+}
+
+/* ── Selection ── */
+::selection {
+  background: rgba(168,85,247,.35);
+  color:      #fff;
+}
+
+/* ── Glass card utility ── */
+.f3-card {
+  background:    var(--surface-1);
+  border:        1px solid var(--border-purple);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+  transition:    border-color .18s ease, background .18s ease;
+}
+.f3-card:hover {
+  background:   var(--surface-2);
+  border-color: var(--border-purple-mid);
+}
+
+.f3-card-cyan {
+  background:    var(--surface-1);
+  border:        1px solid var(--border-cyan);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+  transition:    border-color .18s ease, background .18s ease;
+}
+.f3-card-cyan:hover {
+  background:   var(--surface-2);
+  border-color: var(--border-cyan-bright);
+}
+
+/* ── Glow text utilities ── */
+.glow-purple { text-shadow: 0 0 10px rgba(168,85,247,.8), 0 0 22px rgba(168,85,247,.4); }
+.glow-cyan   { text-shadow: 0 0 10px rgba(0,255,200,.8),  0 0 22px rgba(0,255,200,.4);  }
+.glow-pink   { text-shadow: 0 0 10px rgba(244,114,182,.8),0 0 22px rgba(244,114,182,.4);}
+
+/* ── Stat color utilities ── */
+.stat-will      { color: var(--stat-will);     }
+.stat-strength  { color: var(--stat-strength); }
+.stat-vitality  { color: var(--stat-vitality); }
+.stat-endurance { color: var(--stat-endurance);}
+.stat-skill     { color: var(--stat-skill);    }
+.stat-recovery  { color: var(--stat-recovery); }

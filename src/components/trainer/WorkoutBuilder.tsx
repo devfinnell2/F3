@@ -7,6 +7,8 @@
 
 import { useState } from 'react';
 import type { IExercise, IWorkoutDay } from '@/types';
+import { inputStyle } from '@/lib/inputStyles';
+import LiquidGlassButton from '@/components/ui/LiquidGlassButton';
 
 interface WorkoutBuilderProps {
   clientId:    string;
@@ -36,17 +38,6 @@ const DEFAULT_DAYS: IWorkoutDay[] = [
   { dayLabel: 'SUNDAY', exercises: [] },
 ];
 
-const inputStyle = {
-  background: 'rgba(0,0,0,.45)',
-  border: '1px solid rgba(168,85,247,.2)',
-  color: '#e0d8ff',
-  fontFamily: 'Courier New, monospace',
-  fontSize: '13px',
-  borderRadius: '4px',
-  padding: '6px 8px',
-  outline: 'none',
-  width: '100%',
-};
 
 export default function WorkoutBuilder({
   clientId,
@@ -239,24 +230,14 @@ export default function WorkoutBuilder({
                 <option key={m} value={m}>{m} min</option>
               ))}
             </select>
-            <button
+           <LiquidGlassButton
               onClick={generateWithAI}
               disabled={generating || saving}
-              className="px-3 py-2 text-xs font-bold tracking-widest rounded transition-all"
-              style={{
-                background: generating
-                  ? 'rgba(0,255,200,.04)'
-                  : 'rgba(0,255,200,.1)',
-                border: '1px solid rgba(0,255,200,.35)',
-                color: generating
-                  ? 'rgba(0,255,200,.3)'
-                  : '#6ee7c8',
-                cursor: generating ? 'not-allowed' : 'pointer',
-                fontFamily: 'Courier New, monospace',
-              }}
+              variant="client"
+              size="sm"
             >
               {generating ? '🤖 GENERATING...' : '🤖 AI GENERATE'}
-            </button>
+            </LiquidGlassButton>
           </div>
 
           {/* Status message */}
@@ -278,20 +259,14 @@ export default function WorkoutBuilder({
           )}
 
           {/* Save button */}
-          <button
+         <LiquidGlassButton
             onClick={savePlan}
             disabled={saving}
-            className="px-4 py-2 text-xs font-bold tracking-widest rounded transition-all"
-            style={{
-              background: saving ? 'rgba(168,85,247,.06)' : 'rgba(168,85,247,.15)',
-              border: '1px solid rgba(168,85,247,.4)',
-              color: saving ? 'rgba(192,132,252,.4)' : '#e9d5ff',
-              cursor: saving ? 'not-allowed' : 'pointer',
-              fontFamily: 'Courier New, monospace',
-            }}
+            variant="primary"
+            size="sm"
           >
             {saving ? 'SAVING...' : 'SAVE PLAN'}
-          </button>
+          </LiquidGlassButton>
         </div>
       </div>
 
@@ -312,32 +287,20 @@ export default function WorkoutBuilder({
               🤖 AI GENERATED PLAN — REVIEW BEFORE APPLYING
             </div>
             <div className="flex gap-2">
-              <button
+             <LiquidGlassButton
                 onClick={applyAIPlan}
-                className="px-3 py-1.5 text-xs font-bold tracking-widest rounded"
-                style={{
-                  background: 'rgba(0,255,200,.12)',
-                  border: '1px solid rgba(0,255,200,.35)',
-                  color: '#6ee7c8',
-                  cursor: 'pointer',
-                  fontFamily: 'Courier New, monospace',
-                }}
+                variant="client"
+                size="sm"
               >
                 ✓ APPLY TO BUILDER
-              </button>
-              <button
+              </LiquidGlassButton>
+             <LiquidGlassButton
                 onClick={() => { setShowAiPreview(false); setAiPlan(null); }}
-                className="px-3 py-1.5 text-xs font-bold tracking-widest rounded"
-                style={{
-                  background: 'rgba(244,114,182,.08)',
-                  border: '1px solid rgba(244,114,182,.25)',
-                  color: '#f472b6',
-                  cursor: 'pointer',
-                  fontFamily: 'Courier New, monospace',
-                }}
+                variant="admin"
+                size="sm"
               >
                 ✕ DISCARD
-              </button>
+              </LiquidGlassButton>
             </div>
           </div>
 
@@ -422,18 +385,13 @@ export default function WorkoutBuilder({
               <span style={{ color: 'rgba(168,85,247,.5)', fontSize: '12px' }}>
                 {openDay === dayIdx ? '▲' : '▼'}
               </span>
-              <button
-                onClick={e => { e.stopPropagation(); removeDay(dayIdx); }}
-                className="text-xs px-2 py-1 rounded"
-                style={{
-                  background: 'rgba(244,114,182,.08)',
-                  border: '1px solid rgba(244,114,182,.25)',
-                  color: '#f472b6',
-                  cursor: 'pointer',
-                }}
+          <LiquidGlassButton
+                onClick={() => removeDay(dayIdx)}
+                variant="admin"
+                size="sm"
               >
                 ✕
-              </button>
+              </LiquidGlassButton>
             </div>
 
             {/* Expanded exercises */}
@@ -504,36 +462,26 @@ export default function WorkoutBuilder({
                       placeholder="60s"
                       style={inputStyle}
                     />
-                    <button
+                  <LiquidGlassButton
                       onClick={() => removeExercise(dayIdx, exIdx)}
-                      className="flex items-center justify-center rounded text-xs font-bold"
-                      style={{
-                        background: 'rgba(244,114,182,.08)',
-                        border: '1px solid rgba(244,114,182,.25)',
-                        color: '#f472b6',
-                        cursor: 'pointer',
-                        height: '30px',
-                        width: '30px',
-                      }}
+                      variant="admin"
+                      size="sm"
+                      style={{ height: '30px', width: '30px', padding: '0' }}
                     >
                       ✕
-                    </button>
+                    </LiquidGlassButton>
                   </div>
                 ))}
 
                 {/* Add exercise */}
-                <button
+               <LiquidGlassButton
                   onClick={() => addExercise(dayIdx)}
-                  className="mt-2 px-3 py-1.5 text-xs font-bold tracking-widest rounded transition-all"
-                  style={{
-                    background: 'rgba(0,255,200,.07)',
-                    border: '1px solid rgba(0,255,200,.32)',
-                    color: '#6ee7c8',
-                    cursor: 'pointer',
-                  }}
+                  variant="client"
+                  size="sm"
+                  style={{ marginTop: '8px' }}
                 >
                   + ADD EXERCISE
-                </button>
+                </LiquidGlassButton>
               </div>
             )}
           </div>
@@ -541,18 +489,14 @@ export default function WorkoutBuilder({
       </div>
 
       {/* Add day */}
-      <button
+     <LiquidGlassButton
         onClick={addDay}
-        className="mt-3 px-4 py-2 text-xs font-bold tracking-widest rounded transition-all"
-        style={{
-          background: 'rgba(168,85,247,.09)',
-          border: '1px solid rgba(168,85,247,.38)',
-          color: '#c084fc',
-          cursor: 'pointer',
-        }}
+        variant="primary"
+        size="sm"
+        style={{ marginTop: '12px' }}
       >
         + ADD DAY
-      </button>
+      </LiquidGlassButton>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
+import LiquidGlassButton from '@/components/ui/LiquidGlassButton';
 
 type ProposalType =
   | 'plateau_detected'
@@ -77,26 +78,9 @@ export default function SmartAdjustments() {
             AI monitors your clients and flags issues automatically
           </p>
         </div>
-        <button
-          onClick={runScan}
-          disabled={scanning}
-          style={{
-            padding:       '10px 20px',
-            borderRadius:  '10px',
-            border:        '1px solid rgba(139,92,246,0.5)',
-            background:    scanning ? 'rgba(139,92,246,0.1)' : 'rgba(139,92,246,0.2)',
-            color:         '#a78bfa',
-            fontWeight:    600,
-            fontSize:      '0.85rem',
-            cursor:        scanning ? 'not-allowed' : 'pointer',
-            transition:    'all 0.2s',
-            whiteSpace:    'nowrap',
-          }}
-          onMouseEnter={e => { if (!scanning) (e.target as HTMLButtonElement).style.background = 'rgba(139,92,246,0.35)'; }}
-          onMouseLeave={e => { if (!scanning) (e.target as HTMLButtonElement).style.background = 'rgba(139,92,246,0.2)'; }}
-        >
-          {scanning ? '⏳ Scanning...' : '🔍 Run Scan'}
-        </button>
+       <LiquidGlassButton onClick={runScan} disabled={scanning} variant="primary" size="md">
+          {scanning ? 'SCANNING...' : 'RUN SMART SCAN'}
+        </LiquidGlassButton>
       </div>
 
       {/* Proposals list */}
@@ -181,44 +165,12 @@ export default function SmartAdjustments() {
                       </p>
                     </div>
                     <div style={{ display: 'flex', gap: '10px' }}>
-                      <button
-                        onClick={() => resolve(p._id, 'approved')}
-                        style={{
-                          flex:         1,
-                          padding:      '10px',
-                          borderRadius: '8px',
-                          border:       '1px solid rgba(34,197,94,0.4)',
-                          background:   'rgba(34,197,94,0.12)',
-                          color:        '#86efac',
-                          fontWeight:   600,
-                          fontSize:     '0.85rem',
-                          cursor:       'pointer',
-                          transition:   'background 0.2s',
-                        }}
-                        onMouseEnter={e => ((e.target as HTMLButtonElement).style.background = 'rgba(34,197,94,0.25)')}
-                        onMouseLeave={e => ((e.target as HTMLButtonElement).style.background = 'rgba(34,197,94,0.12)')}
-                      >
-                        ✅ Approve
-                      </button>
-                      <button
-                        onClick={() => resolve(p._id, 'dismissed')}
-                        style={{
-                          flex:         1,
-                          padding:      '10px',
-                          borderRadius: '8px',
-                          border:       '1px solid rgba(239,68,68,0.3)',
-                          background:   'rgba(239,68,68,0.08)',
-                          color:        '#fca5a5',
-                          fontWeight:   600,
-                          fontSize:     '0.85rem',
-                          cursor:       'pointer',
-                          transition:   'background 0.2s',
-                        }}
-                        onMouseEnter={e => ((e.target as HTMLButtonElement).style.background = 'rgba(239,68,68,0.2)')}
-                        onMouseLeave={e => ((e.target as HTMLButtonElement).style.background = 'rgba(239,68,68,0.08)')}
-                      >
-                        ✕ Dismiss
-                      </button>
+                     <LiquidGlassButton onClick={() => resolve(p._id, 'approved')} variant="client" size="sm" fullWidth>
+                        ✓ APPROVE
+                      </LiquidGlassButton>
+                      <LiquidGlassButton onClick={() => resolve(p._id, 'dismissed')} variant="admin" size="sm" fullWidth>
+                        ✕ DISMISS
+                      </LiquidGlassButton>
                     </div>
                   </div>
                 )}

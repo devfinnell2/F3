@@ -6,6 +6,7 @@
 'use client';
 
 import { useState } from 'react';
+import LiquidGlassButton from '@/components/ui/LiquidGlassButton';
 
 interface BillingClientProps {
   currentTier:  string | null;
@@ -195,24 +196,17 @@ export default function BillingClient({
                   ✓ CURRENT PLAN
                 </div>
               ) : (
-                <button
+                <LiquidGlassButton
                   onClick={() => handleSubscribe(plan.tier)}
                   disabled={!!loading}
-                  className="w-full py-3 text-sm font-bold tracking-widest rounded transition-all"
-                  style={{
-                    background: isLoading
-                      ? 'rgba(168,85,247,.06)'
-                      : plan.bgColor,
-                    border:     `1px solid ${plan.borderColor}`,
-                    color:      isLoading ? 'rgba(255,255,255,.3)' : plan.color,
-                    cursor:     loading ? 'not-allowed' : 'pointer',
-                    fontFamily: 'Courier New, monospace',
-                  }}
+                  variant="primary"
+                  size="md"
+                  fullWidth
                 >
                   {isLoading
                     ? 'REDIRECTING...'
                     : `SUBSCRIBE TO ${plan.name}`}
-                </button>
+                </LiquidGlassButton>
               )}
             </div>
           );

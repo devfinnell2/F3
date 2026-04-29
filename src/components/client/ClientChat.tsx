@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
+import LiquidGlassButton from '@/components/ui/LiquidGlassButton';
 
 interface Message {
   _id:       string;
@@ -203,17 +204,13 @@ export default function ClientChat({ myId }: { myId: string }) {
                   YOUR TRAINER
                 </p>
               </div>
-              <button
+              <LiquidGlassButton
                 onClick={() => setOpen(false)}
-                style={{
-                  background: 'transparent', border: 'none',
-                  color: 'rgba(0,255,200,.4)', cursor: 'pointer',
-                  fontSize: '0.75rem', letterSpacing: '0.1em',
-                  fontFamily: 'Courier New, monospace',
-                }}
+                variant="ghost"
+                size="sm"
               >
                 ✕ CLOSE
-              </button>
+              </LiquidGlassButton>
             </div>
 
             {/* Messages */}
@@ -294,28 +291,15 @@ export default function ClientChat({ myId }: { myId: string }) {
                   fontFamily:  'Courier New, monospace',
                 }}
               />
-              <button
+              <LiquidGlassButton
                 onClick={sendMessage}
                 disabled={!input.trim() || sending}
-                style={{
-                  padding:      '9px 18px',
-                  borderRadius: '8px',
-                  border:       '1px solid rgba(0,255,200,.3)',
-                  background:   input.trim()
-                    ? 'linear-gradient(135deg,#06b6d4,#0891b2)'
-                    : 'rgba(0,255,200,.04)',
-                  color:        input.trim() ? '#fff' : 'rgba(0,255,200,.3)',
-                  fontWeight:   700,
-                  fontSize:     '0.8rem',
-                  cursor:       input.trim() ? 'pointer' : 'not-allowed',
-                  letterSpacing:'0.08em',
-                  fontFamily:   'Courier New, monospace',
-                  alignSelf:    'flex-end',
-                  transition:   'all 0.2s',
-                }}
+                variant="client"
+                size="sm"
+                style={{ alignSelf: 'flex-end' }}
               >
                 {sending ? '...' : 'SEND ↑'}
-              </button>
+              </LiquidGlassButton>
             </div>
           </>
         )}

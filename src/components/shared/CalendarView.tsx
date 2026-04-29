@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
+import LiquidGlassButton from '@/components/ui/LiquidGlassButton';
 
 const DAYS   = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
 const MONTHS = ['January','February','March','April','May','June',
@@ -95,19 +96,11 @@ export default function CalendarView({ accentColor = '#a855f7' }: { accentColor?
     <div style={{ maxWidth: '760px' }}>
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <button onClick={prevMonth} style={{
-          background: 'transparent', border: `1px solid ${accentColor}33`,
-          borderRadius: '8px', color: accentColor, padding: '6px 14px',
-          cursor: 'pointer', fontFamily: 'Courier New, monospace', fontSize: '1rem',
-        }}>←</button>
+        <LiquidGlassButton onClick={prevMonth} variant="ghost" size="sm">←</LiquidGlassButton>
         <h2 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: accentColor, letterSpacing: '0.15em' }}>
           {MONTHS[month].toUpperCase()} {year}
         </h2>
-        <button onClick={nextMonth} style={{
-          background: 'transparent', border: `1px solid ${accentColor}33`,
-          borderRadius: '8px', color: accentColor, padding: '6px 14px',
-          cursor: 'pointer', fontFamily: 'Courier New, monospace', fontSize: '1rem',
-        }}>→</button>
+        <LiquidGlassButton onClick={nextMonth} variant="ghost" size="sm">→</LiquidGlassButton>
       </div>
 
       {/* Legend */}
@@ -187,10 +180,7 @@ export default function CalendarView({ accentColor = '#a855f7' }: { accentColor?
             <p style={{ margin: 0, fontSize: '0.72rem', letterSpacing: '0.1em', color: `${accentColor}88` }}>
               ADD EVENT — {selected}
             </p>
-            <button onClick={() => setSelected(null)} style={{
-              background: 'transparent', border: 'none', color: 'rgba(255,255,255,.3)',
-              cursor: 'pointer', fontSize: '0.8rem',
-            }}>✕</button>
+            <LiquidGlassButton onClick={() => setSelected(null)} variant="ghost" size="sm">✕</LiquidGlassButton>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
             <input
@@ -219,15 +209,9 @@ export default function CalendarView({ accentColor = '#a855f7' }: { accentColor?
             style={{ ...inputStyle, resize: 'none', marginBottom: '10px', display: 'block' }}
           />
           <div style={{ display: 'flex', gap: '8px' }}>
-            <button onClick={saveEvent} disabled={!form.title.trim() || saving} style={{
-              flex: 1, padding: '8px', borderRadius: '6px',
-              border: `1px solid ${accentColor}55`, background: `${accentColor}18`,
-              color: accentColor, fontWeight: 700, fontSize: '0.75rem',
-              letterSpacing: '0.1em', cursor: form.title.trim() ? 'pointer' : 'not-allowed',
-              fontFamily: 'Courier New, monospace',
-            }}>
+            <LiquidGlassButton onClick={saveEvent} disabled={!form.title.trim() || saving} variant="primary" size="sm" fullWidth>
               {saving ? 'SAVING...' : 'SAVE EVENT'}
-            </button>
+            </LiquidGlassButton>
           </div>
 
           {/* Events on selected day */}
@@ -247,10 +231,7 @@ export default function CalendarView({ accentColor = '#a855f7' }: { accentColor?
                     <span style={{ fontSize: '0.78rem', color: '#e9d5ff', fontWeight: 600 }}>{ev.title}</span>
                     {ev.notes && <p style={{ margin: '2px 0 0', fontSize: '0.65rem', color: 'rgba(255,255,255,.35)' }}>{ev.notes}</p>}
                   </div>
-                  <button onClick={e => deleteEvent(ev._id, e)} style={{
-                    background: 'transparent', border: 'none', color: 'rgba(255,255,255,.3)',
-                    cursor: 'pointer', fontSize: '0.75rem',
-                  }}>✕</button>
+                 <LiquidGlassButton onClick={(e) => deleteEvent(ev._id, e as React.MouseEvent<Element>)} variant="admin" size="sm">✕</LiquidGlassButton>
                 </div>
               ))}
             </div>

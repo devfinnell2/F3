@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import LiquidGlassButton from '@/components/ui/LiquidGlassButton';
 
 export default function BMICalculator({ accentColor = '#a855f7' }: { accentColor?: string }) {
   const [unit,    setUnit]    = useState<'imperial' | 'metric'>('imperial');
@@ -41,17 +42,15 @@ export default function BMICalculator({ accentColor = '#a855f7' }: { accentColor
     <div style={{ maxWidth: '480px' }}>
       {/* Unit toggle */}
       <div style={{ display: 'flex', gap: '8px', marginBottom: '20px' }}>
-        {(['imperial', 'metric'] as const).map(u => (
-          <button key={u} onClick={() => setUnit(u)} style={{
-            padding: '8px 20px', borderRadius: '8px', fontWeight: 700,
-            fontSize: '0.75rem', letterSpacing: '0.1em', cursor: 'pointer',
-            fontFamily: 'Courier New, monospace', transition: 'all 0.2s',
-            border: `1px solid ${accentColor}${u === unit ? '88' : '22'}`,
-            background: u === unit ? `${accentColor}18` : 'transparent',
-            color: u === unit ? accentColor : 'rgba(255,255,255,.3)',
-          }}>
+       {(['imperial', 'metric'] as const).map(u => (
+          <LiquidGlassButton
+            key={u}
+            onClick={() => setUnit(u)}
+            variant={u === unit ? 'primary' : 'ghost'}
+            size="sm"
+          >
             {u.toUpperCase()}
-          </button>
+          </LiquidGlassButton>
         ))}
       </div>
 
@@ -91,17 +90,14 @@ export default function BMICalculator({ accentColor = '#a855f7' }: { accentColor
           </div>
         )}
 
-        <button onClick={calculate} style={{
-          padding: '12px', borderRadius: '8px', border: `1px solid ${accentColor}55`,
-          background: `${accentColor}18`, color: accentColor, fontWeight: 700,
-          fontSize: '0.85rem', letterSpacing: '0.1em', cursor: 'pointer',
-          fontFamily: 'Courier New, monospace', transition: 'all 0.2s',
-        }}
-        onMouseEnter={e => (e.currentTarget.style.background = `${accentColor}2e`)}
-        onMouseLeave={e => (e.currentTarget.style.background = `${accentColor}18`)}
+        <LiquidGlassButton
+          onClick={calculate}
+          variant="primary"
+          size="md"
+          fullWidth
         >
           CALCULATE BMI
-        </button>
+        </LiquidGlassButton>
       </div>
 
       {result && (

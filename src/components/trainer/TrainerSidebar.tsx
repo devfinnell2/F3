@@ -21,8 +21,8 @@ interface TrainerSidebarProps {
 }
 
 const navItems = [
-  { id: 'clients',  label: 'My Clients',  href: '/dashboard/trainer'           },
-  { id: 'status',   label: 'My Status',   href: '/dashboard/trainer/status'    },
+  { id: 'clients', label: 'My Clients', href: '/dashboard/trainer' },
+  { id: 'status', label: 'My Status', href: '/dashboard/trainer/status' },
   { id: 'ai', label: 'F3 AI Coach', href: '/dashboard/trainer/ai' },
   { id: 'meals', label: 'Meal Plans', href: '/dashboard/trainer/meals' },
   { id: 'workouts', label: 'Workouts', href: '/dashboard/trainer/workouts' },
@@ -30,11 +30,11 @@ const navItems = [
   { id: 'bmi', label: 'BMI Calc', href: '/dashboard/trainer/bmi' },
   { id: 'calendar', label: 'Calendar', href: '/dashboard/trainer/calendar' },
   { id: 'messages', label: 'Messages', href: '/dashboard/trainer/messages' },
-  { id: 'profile',   label: 'My Profile',  href: '/dashboard/trainer/profile'        },
-  { id: 'myworkout', label: 'My Workout',  href: '/dashboard/trainer/profile/workout' },
-  { id: 'mymeal',    label: 'My Meals',    href: '/dashboard/trainer/profile/meals'   },
-  { id: 'mysups',    label: 'My Supps',    href: '/dashboard/trainer/profile/supps'   },
-  { id: 'billing',   label: 'Billing',     href: '/dashboard/trainer/billing'         },
+  { id: 'profile', label: 'My Profile', href: '/dashboard/trainer/profile' },
+  { id: 'myworkout', label: 'My Workout', href: '/dashboard/trainer/profile/workout' },
+  { id: 'mymeal', label: 'My Meals', href: '/dashboard/trainer/profile/meals' },
+  { id: 'mysups', label: 'My Supps', href: '/dashboard/trainer/profile/supps' },
+  { id: 'billing', label: 'Billing', href: '/dashboard/trainer/billing' },
 ];
 
 export default function TrainerSidebar({
@@ -124,17 +124,33 @@ export default function TrainerSidebar({
               <Link
                 key={item.id}
                 href={item.href}
-                className="flex items-center gap-2 px-3 py-2 rounded-r transition-all text-sm tracking-wide uppercase"
+                className="flex items-center gap-2 px-3 py-2 rounded-r text-sm tracking-wide uppercase"
                 style={{
-                  color: isActive ? '#e9d5ff' : 'rgba(192,132,252,.42)',
-                  background: isActive ? 'rgba(168,85,247,.1)' : 'transparent',
-                  borderLeft: isActive ? '2px solid #a855f7' : '2px solid transparent',
+                  position: 'relative',
+                  overflow: 'hidden',
                   textDecoration: 'none',
+                  transition: 'all .18s ease',
+                  color: isActive ? '#ffffff' : 'rgba(192,132,252,.42)',
+                  background: isActive
+                    ? 'linear-gradient(90deg, rgba(168,85,247,.28) 0%, rgba(168,85,247,.10) 60%, transparent 100%)'
+                    : 'transparent',
+                  borderLeft: isActive ? '2px solid #c084fc' : '2px solid transparent',
+                  boxShadow: isActive
+                    ? 'inset 0 0 14px rgba(168,85,247,.35), -2px 0 12px rgba(192,132,252,.55), -4px 0 22px rgba(168,85,247,.35)'
+                    : 'none',
+                  textShadow: isActive
+                    ? '0 0 8px rgba(216,180,254,.9), 0 0 18px rgba(168,85,247,.6)'
+                    : 'none',
                 }}
               >
                 <span
-                  className="w-1 h-1 rotate-45 shrink-0"
-                  style={{ border: '1px solid currentColor' }}
+                  className="w-1.5 h-1.5 rotate-45 shrink-0"
+                  style={{
+                    border: '1px solid currentColor',
+                    background: isActive ? '#c084fc' : 'transparent',
+                    boxShadow: isActive ? '0 0 6px #c084fc, 0 0 12px rgba(168,85,247,.9)' : 'none',
+                    transition: 'all .18s ease',
+                  }}
                 />
                 {item.label}
                 {item.id === 'messages' && <UnreadBadge />}

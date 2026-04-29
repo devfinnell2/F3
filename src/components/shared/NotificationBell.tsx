@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
+import LiquidGlassButton from '@/components/ui/LiquidGlassButton';
 
 interface AppNotification {
     _id: string;
@@ -136,42 +137,18 @@ export default function NotificationBell({ accentColor = '#a855f7' }: { accentCo
     return (
         <div ref={panelRef} style={{ position: 'relative' }}>
             {/* Bell button */}
-            <button
-                onClick={togglePanel}
-                style={{
-                    position: 'relative',
-                    background: 'transparent',
-                    border: `1px solid ${accentColor}33`,
-                    borderRadius: '8px',
-                    color: accentColor,
-                    padding: '6px 10px',
-                    cursor: 'pointer',
-                    fontSize: '1rem',
-                    fontFamily: 'Courier New, monospace',
-                    transition: 'all 0.2s',
-                }}
-                onMouseEnter={e => (e.currentTarget.style.background = `${accentColor}18`)}
-                onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-                title="Notifications"
-            >
+            <LiquidGlassButton onClick={togglePanel} variant="ghost" size="sm" style={{ position:'relative' }}>
                 🔔
                 {unread > 0 && (
                     <span style={{
-                        position: 'absolute',
-                        top: '-6px',
-                        right: '-6px',
-                        background: '#f472b6',
-                        color: '#fff',
-                        borderRadius: '10px',
-                        padding: '1px 5px',
-                        fontSize: '0.65rem',
-                        fontWeight: 700,
-                        lineHeight: 1.4,
+                        position: 'absolute', top: '-6px', right: '-6px',
+                        background: '#f472b6', color: '#fff', borderRadius: '10px',
+                        padding: '1px 5px', fontSize: '0.65rem', fontWeight: 700, lineHeight: 1.4,
                     }}>
                         {unread > 9 ? '9+' : unread}
                     </span>
                 )}
-            </button>
+            </LiquidGlassButton>
 
             {/* Dropdown panel */}
             {open && (
@@ -205,23 +182,7 @@ export default function NotificationBell({ accentColor = '#a855f7' }: { accentCo
                             NOTIFICATIONS
                         </span>
                         {!pushGranted && 'Notification' in window && Notification.permission !== 'granted' && (
-                            <button
-                                onClick={enablePush}
-                                style={{
-                                    background: `${accentColor}18`,
-                                    border: `1px solid ${accentColor}40`,
-                                    color: accentColor,
-                                    borderRadius: '6px',
-                                    padding: '3px 10px',
-                                    fontSize: '0.68rem',
-                                    fontWeight: 700,
-                                    cursor: 'pointer',
-                                    letterSpacing: '0.08em',
-                                    fontFamily: 'Courier New, monospace',
-                                }}
-                            >
-                                ENABLE PUSH
-                            </button>
+                            <LiquidGlassButton onClick={enablePush} variant="primary" size="sm">ENABLE PUSH</LiquidGlassButton>
                         )}
                     </div>
 

@@ -5,8 +5,10 @@
 
 'use client';
 
+import LiquidGlassButton from '@/components/ui/LiquidGlassButton';
 import { useState } from 'react';
 import type { IFoodItem, IMealEntry, IDailyMacros } from '@/types';
+import { inputStyle } from '@/lib/inputStyles';
 
 interface MealLoggerProps {
   clientId:     string;
@@ -30,18 +32,6 @@ const EMPTY_MEAL: IMealEntry = {
   mealName: '',
   mealTime: '09:00',
   foods:    [{ ...EMPTY_FOOD }],
-};
-
-const inputStyle = {
-  background:   'rgba(0,0,0,.45)',
-  border:       '1px solid rgba(168,85,247,.2)',
-  color:        '#e0d8ff',
-  fontFamily:   'Courier New, monospace',
-  fontSize:     '13px',
-  borderRadius: '4px',
-  padding:      '6px 8px',
-  outline:      'none',
-  width:        '100%',
 };
 
 export default function MealLogger({
@@ -274,20 +264,7 @@ async function handleLog() {
                 onChange={e => updateMeal(mIdx, 'mealTime', e.target.value)}
                 style={{ ...inputStyle, width: '110px' }}
               />
-              <button
-                onClick={() => removeMeal(mIdx)}
-                style={{
-                  background: 'rgba(244,114,182,.08)',
-                  border:     '1px solid rgba(244,114,182,.25)',
-                  color:      '#f472b6',
-                  cursor:     'pointer',
-                  padding:    '4px 8px',
-                  borderRadius: '4px',
-                  fontSize:   '12px',
-                }}
-              >
-                ✕
-              </button>
+             <LiquidGlassButton onClick={() => removeMeal(mIdx)} variant="admin" size="sm">✕</LiquidGlassButton>
             </div>
 
             {/* Food rows */}
@@ -370,42 +347,11 @@ async function handleLog() {
                     placeholder="g"
                     style={inputStyle}
                   />
-                  <button
-                    onClick={() => removeFood(mIdx, fIdx)}
-                    style={{
-                      background:   'rgba(244,114,182,.08)',
-                      border:       '1px solid rgba(244,114,182,.25)',
-                      color:        '#f472b6',
-                      cursor:       'pointer',
-                      borderRadius: '4px',
-                      height:       '30px',
-                      width:        '30px',
-                      fontSize:     '12px',
-                    }}
-                  >
-                    ✕
-                  </button>
+                  <LiquidGlassButton onClick={() => removeFood(mIdx, fIdx)} variant="admin" size="sm" style={{ height:'30px', width:'30px', padding:'0' }}>✕</LiquidGlassButton>
                 </div>
               ))}
 
-              <button
-                onClick={() => addFood(mIdx)}
-                style={{
-                  background:   'rgba(0,255,200,.07)',
-                  border:       '1px solid rgba(0,255,200,.32)',
-                  color:        '#6ee7c8',
-                  cursor:       'pointer',
-                  padding:      '6px 12px',
-                  borderRadius: '4px',
-                  fontSize:     '12px',
-                  fontFamily:   'Courier New, monospace',
-                  fontWeight:   '700',
-                  letterSpacing:'1px',
-                  marginTop:    '8px',
-                }}
-              >
-                + ADD FOOD
-              </button>
+             <LiquidGlassButton onClick={() => addFood(mIdx)} variant="client" size="sm" style={{ marginTop:'8px' }}>+ ADD FOOD</LiquidGlassButton>
             </div>
           </div>
         ))}
@@ -413,41 +359,10 @@ async function handleLog() {
 
       {/* Add meal + save row */}
       <div className="flex items-center gap-3 flex-wrap">
-        <button
-          onClick={addMeal}
-          style={{
-            background:   'rgba(168,85,247,.09)',
-            border:       '1px solid rgba(168,85,247,.38)',
-            color:        '#c084fc',
-            cursor:       'pointer',
-            padding:      '8px 16px',
-            borderRadius: '4px',
-            fontSize:     '12px',
-            fontFamily:   'Courier New, monospace',
-            fontWeight:   '700',
-            letterSpacing:'1px',
-          }}
-        >
-          + ADD MEAL
-        </button>
-        <button
-          onClick={handleLog}
-          disabled={saving}
-          style={{
-            background:   saving ? 'rgba(168,85,247,.06)' : 'rgba(0,255,200,.1)',
-            border:       '1px solid rgba(0,255,200,.38)',
-            color:        saving ? 'rgba(0,255,200,.35)' : '#6ee7c8',
-            cursor:       saving ? 'not-allowed' : 'pointer',
-            padding:      '8px 16px',
-            borderRadius: '4px',
-            fontSize:     '12px',
-            fontFamily:   'Courier New, monospace',
-            fontWeight:   '700',
-            letterSpacing:'1px',
-          }}
-        >
+       <LiquidGlassButton onClick={addMeal} variant="primary" size="sm">+ ADD MEAL</LiquidGlassButton>
+        <LiquidGlassButton onClick={handleLog} disabled={saving} variant="client" size="sm">
           {saving ? 'LOGGING...' : 'SAVE + LOG MEALS'}
-        </button>
+        </LiquidGlassButton>
         {message && (
           <span
             style={{
@@ -502,19 +417,7 @@ async function handleLog() {
           >
             {aiCorrection}
           </div>
-          <button
-            onClick={() => setAiCorrection('')}
-            className="mt-3 text-xs px-3 py-1 rounded"
-            style={{
-              background: 'transparent',
-              border:     '1px solid rgba(0,255,200,.2)',
-              color:      'rgba(0,255,200,.5)',
-              cursor:     'pointer',
-              fontFamily: 'Courier New, monospace',
-            }}
-          >
-            DISMISS
-          </button>
+          <LiquidGlassButton onClick={() => setAiCorrection('')} variant="ghost" size="sm" style={{ marginTop:'12px' }}>DISMISS</LiquidGlassButton>
         </div>
       )}
     </div>
