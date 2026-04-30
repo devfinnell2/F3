@@ -6,6 +6,7 @@ import UserModel             from '@/lib/db/models/User';
 import ClientProfileModel    from '@/lib/db/models/ClientProfile';
 import MessageModel          from '@/lib/db/models/Message';
 import ClientSidebar         from '@/components/client/ClientSidebar';
+import DashboardLayout from '@/components/layout/DashboardLayout';
 
 export default async function ClientSupplementsPage() {
   const session = await getServerSession(authOptions);
@@ -41,9 +42,13 @@ export default async function ClientSupplementsPage() {
     { name: 'Magnesium',       dose: '200–400mg', timing: 'Before bed',         icon: '🌙', color: '#c084fc' },
   ];
 
+
+  const sidebar = (
+    <ClientSidebar client={clientData} trainer={trainerData} activeItem="supplements" unreadCount={unreadCount} />
+  );
   return (
-    <div className="flex min-h-screen" style={{ background: 'linear-gradient(135deg,#060612 0%,#0d0820 40%,#140a2e 70%,#0a0a1a 100%)' }}>
-      <ClientSidebar client={clientData} trainer={trainerData} activeItem="supplements" unreadCount={unreadCount} />
+    <DashboardLayout sidebar={sidebar} accentColor="#00ffc8">
+      
       <main className="flex-1 p-6 overflow-y-auto" style={{ color: '#e0d8ff', fontFamily: 'Courier New, monospace' }}>
         <h1 className="text-2xl font-bold tracking-widest mb-2" style={{ color: '#6ee7c8' }}>SUPPLEMENT PLAN</h1>
         <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,.32)' }}>
@@ -86,6 +91,6 @@ export default async function ClientSupplementsPage() {
           </div>
         )}
       </main>
-    </div>
+    </DashboardLayout>
   );
 }

@@ -11,6 +11,7 @@ import MealPlanModel from '@/lib/db/models/MealPlan';
 import TrainerSidebar from '@/components/trainer/TrainerSidebar';
 import MealLogger from '@/components/shared/MealLogger';
 import type { IDailyMacros } from '@/types';
+import DashboardLayout from '@/components/layout/DashboardLayout';
 
 interface PageProps {
   searchParams: Promise<{ clientId?: string }>;
@@ -67,14 +68,13 @@ export default async function TrainerMealsPage({ searchParams }: PageProps) {
     }
   }
 
+
+  const sidebar = (
+    <TrainerSidebar trainer={trainer} activeItem="meals" />
+  );
   return (
-    <div
-      className="flex min-h-screen"
-      style={{
-        background: 'linear-gradient(135deg,#060612 0%,#0d0820 40%,#140a2e 70%,#0a0a1a 100%)',
-      }}
-    >
-      <TrainerSidebar trainer={trainer} activeItem="meals" />
+    <DashboardLayout sidebar={sidebar} accentColor="#a855f7">
+      
 
       <main
         className="flex-1 p-6 overflow-y-auto"
@@ -185,6 +185,6 @@ export default async function TrainerMealsPage({ searchParams }: PageProps) {
           </div>
         )}
       </main>
-    </div>
+    </DashboardLayout>
   );
 }

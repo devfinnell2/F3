@@ -12,6 +12,7 @@ import WorkoutModel from '@/lib/db/models/Workout';
 import TrainerSidebar from '@/components/trainer/TrainerSidebar';
 import WorkoutBuilder from '@/components/trainer/WorkoutBuilder';
 import type { IWorkoutDay } from '@/types';
+import DashboardLayout from '@/components/layout/DashboardLayout';
 
 interface PageProps {
     searchParams: Promise<{ clientId?: string }>;
@@ -62,14 +63,12 @@ export default async function TrainerWorkoutsPage({ searchParams }: PageProps) {
         existingPlan = (workout?.plan as IWorkoutDay[]) ?? [];
     }
 
+    const sidebar = (
+        <TrainerSidebar trainer={trainer} activeItem="workouts" />
+    );
     return (
-        <div
-            className="flex min-h-screen"
-            style={{
-                background: 'linear-gradient(135deg,#060612 0%,#0d0820 40%,#140a2e 70%,#0a0a1a 100%)',
-            }}
-        >
-            <TrainerSidebar trainer={trainer} activeItem="workouts" />
+        <DashboardLayout sidebar={sidebar} accentColor="#a855f7">
+            
 
             <main
                 className="flex-1 p-6 overflow-y-auto"
@@ -170,6 +169,6 @@ export default async function TrainerWorkoutsPage({ searchParams }: PageProps) {
                     </div>
                 )}
             </main>
-        </div>
+        </DashboardLayout>
     );
 }

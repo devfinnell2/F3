@@ -7,6 +7,7 @@ import { authOptions }      from '@/lib/auth/config';
 import { redirect }         from 'next/navigation';
 import TrainerSidebar       from '@/components/trainer/TrainerSidebar';
 import BillingClient        from '@/components/trainer/BillingClient';
+import DashboardLayout from '@/components/layout/DashboardLayout';
 
 export default async function BillingPage() {
   const session = await getServerSession(authOptions);
@@ -27,14 +28,13 @@ export default async function BillingPage() {
       .slice(0, 2),
   };
 
+
+  const sidebar = (
+    <TrainerSidebar trainer={trainer} activeItem="billing" />
+  );
   return (
-    <div
-      className="flex min-h-screen"
-      style={{
-        background: 'linear-gradient(135deg,#060612 0%,#0d0820 40%,#140a2e 70%,#0a0a1a 100%)',
-      }}
-    >
-      <TrainerSidebar trainer={trainer} activeItem="billing" />
+    <DashboardLayout sidebar={sidebar} accentColor="#a855f7">
+      
 
       <main
         className="flex-1 p-6 overflow-y-auto"
@@ -55,6 +55,6 @@ export default async function BillingPage() {
           trainerName={trainer.name}
         />
       </main>
-    </div>
+    </DashboardLayout>
   );
 }

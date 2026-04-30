@@ -6,6 +6,7 @@ import UserModel             from '@/lib/db/models/User';
 import ClientProfileModel    from '@/lib/db/models/ClientProfile';
 import MessageModel          from '@/lib/db/models/Message';
 import ClientSidebar         from '@/components/client/ClientSidebar';
+import DashboardLayout from '@/components/layout/DashboardLayout';
 
 const GOAL_LABELS: Record<string, string> = {
   fat_loss: 'Fat Loss', muscle_gain: 'Muscle Gain', endurance: 'Endurance',
@@ -43,9 +44,13 @@ export default async function ClientGoalsPage() {
   const waistCurrent = profile?.waistCurrent ?? null;
   const waistStart   = profile?.waistStart  ?? null;
 
+
+  const sidebar = (
+    <ClientSidebar client={clientData} trainer={trainerData} activeItem="goals" unreadCount={unreadCount} />
+  );
   return (
-    <div className="flex min-h-screen" style={{ background: 'linear-gradient(135deg,#060612 0%,#0d0820 40%,#140a2e 70%,#0a0a1a 100%)' }}>
-      <ClientSidebar client={clientData} trainer={trainerData} activeItem="goals" unreadCount={unreadCount} />
+    <DashboardLayout sidebar={sidebar} accentColor="#00ffc8">
+      
       <main className="flex-1 p-6 overflow-y-auto" style={{ color: '#e0d8ff', fontFamily: 'Courier New, monospace' }}>
         <h1 className="text-2xl font-bold tracking-widest mb-2" style={{ color: '#6ee7c8' }}>MY GOALS</h1>
         <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,.32)' }}>Your targets set with your trainer.</p>
@@ -116,6 +121,6 @@ export default async function ClientGoalsPage() {
           </div>
         </div>
       </main>
-    </div>
+    </DashboardLayout>
   );
 }

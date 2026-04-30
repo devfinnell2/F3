@@ -143,11 +143,20 @@ export default function AICoach({ clients, trainerTier }: AICoachProps) {
         style={{ borderBottom: '1px solid rgba(168,85,247,.14)', background: 'rgba(0,0,0,.3)' }}
       >
         {/* AI avatar */}
-        <div
-          className="w-10 h-10 rounded-full flex items-center justify-center text-xl shrink-0"
+       <div
+          className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
           style={{ background: 'rgba(0,255,200,.08)', border: '1px solid rgba(0,255,200,.25)' }}
         >
-          🤖
+          <svg width="26" height="26" viewBox="0 0 40 40" fill="none">
+            <polygon points="20,3 34,11 34,29 20,37 6,29 6,11" stroke="#a855f7" strokeWidth="1" fill="rgba(168,85,247,.05)"/>
+            <circle cx="20" cy="20" r="7"  stroke="#00ffc8" strokeWidth="1" fill="none"/>
+            <circle cx="20" cy="20" r="3"  stroke="#c084fc" strokeWidth="1" fill="rgba(168,85,247,.15)"/>
+            <circle cx="20" cy="20" r="1"  fill="#00ffc8"/>
+            <line x1="20" y1="8"  x2="20" y2="12" stroke="#00ffc8" strokeWidth="1"/>
+            <line x1="20" y1="28" x2="20" y2="32" stroke="#00ffc8" strokeWidth="1"/>
+            <line x1="8"  y1="20" x2="12" y2="20" stroke="#00ffc8" strokeWidth="1"/>
+            <line x1="28" y1="20" x2="32" y2="20" stroke="#00ffc8" strokeWidth="1"/>
+          </svg>
         </div>
 
         <div className="flex-1">
@@ -163,24 +172,34 @@ export default function AICoach({ clients, trainerTier }: AICoachProps) {
         </div>
 
         {/* Tier badge */}
-        {isElite ? (
+       {isElite ? (
           <span
-            className="text-xs font-bold px-3 py-1 rounded"
+            className="text-xs font-bold px-3 py-1"
             style={{
-              background: 'rgba(251,191,36,.1)',
-              border: '1px solid rgba(251,191,36,.28)',
-              color: '#fbbf24',
+              background:     'rgba(251,191,36,.1)',
+              border:         '1px solid rgba(251,191,36,.45)',
+              color:          '#fbbf24',
+              borderRadius:   '20px',
+              backdropFilter: 'blur(8px)',
+              textShadow:     '0 0 8px rgba(251,191,36,.8)',
+              boxShadow:      'inset 0 1px 0 rgba(255,255,255,.2), 0 0 12px rgba(251,191,36,.3)',
+              letterSpacing:  '0.1em',
             }}
           >
             ELITE — UNLIMITED AI
           </span>
         ) : (
           <span
-            className="text-xs font-bold px-3 py-1 rounded"
+            className="text-xs font-bold px-3 py-1"
             style={{
-              background: 'rgba(168,85,247,.1)',
-              border: '1px solid rgba(168,85,247,.28)',
-              color: '#d8b4fe',
+              background:     'rgba(168,85,247,.1)',
+              border:         '1px solid rgba(168,85,247,.45)',
+              color:          '#d8b4fe',
+              borderRadius:   '20px',
+              backdropFilter: 'blur(8px)',
+              textShadow:     '0 0 8px rgba(168,85,247,.8)',
+              boxShadow:      'inset 0 1px 0 rgba(255,255,255,.2), 0 0 12px rgba(168,85,247,.3)',
+              letterSpacing:  '0.1em',
             }}
           >
             PRO — LIMITED AI
@@ -225,19 +244,23 @@ export default function AICoach({ clients, trainerTier }: AICoachProps) {
           >
             <div
               style={{
-                maxWidth: '80%',
-                padding: '10px 14px',
-                borderRadius: '8px',
-                fontSize: '15px',
-                lineHeight: '1.6',
-                whiteSpace: 'pre-wrap',
-                background: msg.role === 'user'
-                  ? 'rgba(168,85,247,.12)'
-                  : 'rgba(0,255,200,.05)',
+                maxWidth:       '80%',
+                padding:        '12px 16px',
+                borderRadius:   msg.role === 'user' ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
+                fontSize:       '15px',
+                lineHeight:     '1.6',
+                whiteSpace:     'pre-wrap',
+                backdropFilter: 'blur(12px) saturate(1.4)',
+                background:     msg.role === 'user'
+                  ? 'rgba(168,85,247,.15)'
+                  : 'rgba(0,255,200,.07)',
                 border: msg.role === 'user'
-                  ? '1px solid rgba(168,85,247,.25)'
-                  : '1px solid rgba(0,255,200,.15)',
-                color: msg.role === 'user' ? '#ddd6fe' : '#a7f3d0',
+                  ? '1px solid rgba(168,85,247,.4)'
+                  : '1px solid rgba(0,255,200,.25)',
+                color:     msg.role === 'user' ? '#ddd6fe' : '#a7f3d0',
+                boxShadow: msg.role === 'user'
+                  ? 'inset 0 1px 0 rgba(255,255,255,.15), 0 0 16px rgba(168,85,247,.2)'
+                  : 'inset 0 1px 0 rgba(255,255,255,.1),  0 0 16px rgba(0,255,200,.15)',
               }}
             >
               {msg.content}
@@ -269,19 +292,42 @@ export default function AICoach({ clients, trainerTier }: AICoachProps) {
         ))}
 
         {/* Loading indicator */}
-        {loading && (
+       {loading && (
           <div className="flex justify-start mb-4">
             <div
               style={{
-                padding: '10px 14px',
-                borderRadius: '8px',
-                background: 'rgba(0,255,200,.05)',
-                border: '1px solid rgba(0,255,200,.15)',
-                color: 'rgba(0,255,200,.5)',
-                fontSize: '15px',
+                padding:        '12px 16px',
+                borderRadius:   '18px 18px 18px 4px',
+                backdropFilter: 'blur(12px)',
+                background:     'rgba(0,255,200,.07)',
+                border:         '1px solid rgba(0,255,200,.25)',
+                color:          'rgba(0,255,200,.7)',
+                fontSize:       '15px',
+                boxShadow:      'inset 0 1px 0 rgba(255,255,255,.1), 0 0 16px rgba(0,255,200,.15)',
+                display:        'flex',
+                alignItems:     'center',
+                gap:            '8px',
               }}
             >
+              <span style={{
+                display:  'inline-flex',
+                gap:      '4px',
+                alignItems: 'center',
+              }}>
+                {[0,1,2].map(i => (
+                  <span key={i} style={{
+                    width:            '6px',
+                    height:           '6px',
+                    borderRadius:     '50%',
+                    background:       '#00ffc8',
+                    display:          'inline-block',
+                    animation:        `f3pulse 1.2s ease-in-out ${i * 0.2}s infinite`,
+                    boxShadow:        '0 0 6px rgba(0,255,200,.8)',
+                  }}/>
+                ))}
+              </span>
               F3 AI thinking...
+              <style>{`@keyframes f3pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}`}</style>
             </div>
           </div>
         )}

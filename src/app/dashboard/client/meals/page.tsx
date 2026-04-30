@@ -12,6 +12,7 @@ import UserModel             from '@/lib/db/models/User';
 import ClientSidebar         from '@/components/client/ClientSidebar';
 import MealLogger            from '@/components/shared/MealLogger';
 import type { IDailyMacros } from '@/types';
+import DashboardLayout from '@/components/layout/DashboardLayout';
 
 export default async function ClientMealsPage() {
   const session = await getServerSession(authOptions);
@@ -67,19 +68,18 @@ export default async function ClientMealsPage() {
       }
     : null;
 
-  return (
-    <div
-      className="flex min-h-screen"
-      style={{
-        background: 'linear-gradient(135deg,#060612 0%,#0d0820 40%,#140a2e 70%,#0a0a1a 100%)',
-      }}
-    >
-      <ClientSidebar
+
+  const sidebar = (
+    <ClientSidebar
         client={clientData}
         trainer={trainerData}
         activeItem="meals"
         unreadCount={0}
       />
+  );
+  return (
+    <DashboardLayout sidebar={sidebar} accentColor="#00ffc8">
+      
 
       <main
         className="flex-1 p-6 overflow-y-auto"
@@ -160,6 +160,6 @@ export default async function ClientMealsPage() {
           />
         </div>
       </main>
-    </div>
+    </DashboardLayout>
   );
 }

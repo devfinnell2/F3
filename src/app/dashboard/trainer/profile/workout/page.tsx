@@ -6,6 +6,7 @@ import WorkoutModel         from '@/lib/db/models/Workout';
 import TrainerSidebar       from '@/components/trainer/TrainerSidebar';
 import WorkoutBuilder       from '@/components/trainer/WorkoutBuilder';
 import type { IWorkoutDay } from '@/types';
+import DashboardLayout from '@/components/layout/DashboardLayout';
 
 export default async function TrainerSelfWorkoutPage() {
   const session = await getServerSession(authOptions);
@@ -23,9 +24,13 @@ export default async function TrainerSelfWorkoutPage() {
     avatarInitials: (session.user.name ?? 'T').split(' ').map((p: string) => p[0]).join('').toUpperCase().slice(0, 2),
   };
 
+
+  const sidebar = (
+    <TrainerSidebar trainer={trainer} activeItem="myworkout" />
+  );
   return (
-    <div className="flex min-h-screen" style={{ background: 'linear-gradient(135deg,#060612 0%,#0d0820 40%,#140a2e 70%,#0a0a1a 100%)' }}>
-      <TrainerSidebar trainer={trainer} activeItem="myworkout" />
+    <DashboardLayout sidebar={sidebar} accentColor="#a855f7">
+      
       <main className="flex-1 p-6 overflow-y-auto" style={{ color: '#e0d8ff', fontFamily: 'Courier New, monospace' }}>
         <h1 className="text-2xl font-bold tracking-widest mb-2" style={{ color: '#d8b4fe' }}>MY WORKOUT PLAN</h1>
         <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,.32)' }}>
@@ -37,6 +42,6 @@ export default async function TrainerSelfWorkoutPage() {
           initialPlan={(workout?.plan ?? []) as IWorkoutDay[]}
         />
       </main>
-    </div>
+    </DashboardLayout>
   );
 }

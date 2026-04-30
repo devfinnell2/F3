@@ -8,6 +8,7 @@ import { connectDB }         from '@/lib/db/mongoose';
 import ClientProfileModel    from '@/lib/db/models/ClientProfile';
 import TrainerSidebar        from '@/components/trainer/TrainerSidebar';
 import TrainerPhotoUploader  from '@/components/trainer/TrainerPhotoUploader';
+import DashboardLayout from '@/components/layout/DashboardLayout';
 
 export default async function TrainerProfilePage() {
   const session = await getServerSession(authOptions);
@@ -46,14 +47,13 @@ export default async function TrainerProfilePage() {
     afterDate:  (profile as any)?.afterPhotoDate  ?? null,
   };
 
+
+  const sidebar = (
+    <TrainerSidebar trainer={trainer} activeItem="profile" />
+  );
   return (
-    <div
-      className="flex min-h-screen"
-      style={{
-        background: 'linear-gradient(135deg,#060612 0%,#0d0820 40%,#140a2e 70%,#0a0a1a 100%)',
-      }}
-    >
-      <TrainerSidebar trainer={trainer} activeItem="profile" />
+    <DashboardLayout sidebar={sidebar} accentColor="#a855f7">
+      
 
       <main
         className="flex-1 p-6 overflow-y-auto"
@@ -136,6 +136,6 @@ export default async function TrainerProfilePage() {
 
         </div>
       </main>
-    </div>
+    </DashboardLayout>
   );
 }

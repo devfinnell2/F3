@@ -2,6 +2,9 @@
 //  F3 — Trainer Dashboard Page
 // ─────────────────────────────────────────────
 
+import MobileSidebarWrapper from '@/components/ui/MobileSidebarWrapper';
+import GlassLink from '@/components/ui/GlassLink';
+import LiquidGlassButton from '@/components/ui/LiquidGlassButton';
 import { getServerSession }  from 'next-auth';
 import { authOptions }       from '@/lib/auth/config';
 import { redirect }          from 'next/navigation';
@@ -80,18 +83,16 @@ export default async function TrainerDashboard() {
   };
 
   return (
-    <div
-      className="flex min-h-screen"
-      style={{
-        background: 'linear-gradient(135deg,#060612 0%,#0d0820 40%,#140a2e 70%,#0a0a1a 100%)',
-      }}
-    >
-      <TrainerSidebar trainer={trainer} activeItem="clients" />
-
-      <main
-        className="flex-1 p-6 overflow-y-auto"
-        style={{ color: '#e0d8ff', fontFamily: 'Courier New, monospace' }}
+    <div style={{ background: 'linear-gradient(135deg,#060612 0%,#0d0820 40%,#140a2e 70%,#0a0a1a 100%)', minHeight: '100vh' }}>
+      <MobileSidebarWrapper
+        sidebar={<TrainerSidebar trainer={trainer} activeItem="clients" />}
+        accentColor="#a855f7"
       >
+        <div
+          className="p-4 lg:p-6"
+          style={{ color: '#e0d8ff', fontFamily: 'Courier New, monospace' }}
+        >
+
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <div>
@@ -111,67 +112,49 @@ export default async function TrainerDashboard() {
             </p>
           </div>
           
-            <a href="/dashboard/trainer/enroll"
-            className="px-4 py-2 text-sm font-bold tracking-widest rounded transition-all"
-            style={{
-              background:     'rgba(168,85,247,.09)',
-              border:         '1px solid rgba(168,85,247,.38)',
-              color:          '#c084fc',
-              fontFamily:     'Courier New, monospace',
-              textDecoration: 'none',
-            }}
-          >
+           <GlassLink href="/dashboard/trainer/enroll" variant="primary" size="md">
             + ENROLL CLIENT
-          </a>
+          </GlassLink>
         </div>
 
-        {/* Stats row */}
+      {/* Stats row */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
           {[
-            { label: 'Active',    value: stats.active,   color: '#e9d5ff'  },
-            { label: 'Check-ins', value: stats.checkins, color: '#e9d5ff'  },
-            { label: 'Goals Met', value: stats.goalsMet, color: '#e9d5ff'  },
-            { label: 'Avg Level', value: stats.avgLevel, color: '#00ffc8'  },
+            { label: 'Active Clients', value: stats.active,   color: '#c084fc', glow: 'rgba(168,85,247,.5)' },
+            { label: 'Check-ins',      value: stats.checkins, color: '#e9d5ff', glow: 'rgba(255,255,255,.3)' },
+            { label: 'Goals Met',      value: stats.goalsMet, color: '#fbbf24', glow: 'rgba(251,191,36,.5)'  },
+            { label: 'Avg Level',      value: stats.avgLevel, color: '#00ffc8', glow: 'rgba(0,255,200,.5)'   },
           ].map(stat => (
             <div
               key={stat.label}
-              className="rounded-lg p-3"
-              style={{
-                background: 'rgba(168,85,247,.05)',
-                border:     '1px solid rgba(168,85,247,.13)',
-              }}
+              className="f3-card rounded-lg p-3"
+              style={{ borderLeft: `2px solid ${stat.glow}` }}
             >
-              <div
-                className="text-xs tracking-widest mb-1"
-                style={{ color: 'rgba(192,132,252,.48)' }}
-              >
+              <div className="text-xs tracking-widest mb-1" style={{ color: 'rgba(192,132,252,.48)' }}>
                 {stat.label.toUpperCase()}
               </div>
               <div
                 className="text-3xl font-bold"
-                style={{ color: stat.color, fontFamily: 'Courier New, monospace' }}
+                style={{ color: stat.color, fontFamily: 'Courier New, monospace', textShadow: `0 0 12px ${stat.glow}` }}
               >
                 {stat.value}
               </div>
             </div>
           ))}
         </div>
-
         {/* Client list */}
         {clientsWithProfiles.length === 0 ? (
-          <div
-            className="rounded-lg p-8 text-center"
-            style={{
-              background: 'rgba(255,255,255,.035)',
-              border:     '1px solid rgba(168,85,247,.16)',
-            }}
-          >
+         <div className="f3-card rounded-lg p-8 text-center">
             <div className="text-lg mb-2" style={{ color: 'rgba(168,85,247,.5)' }}>
               NO CLIENTS YET
             </div>
-            <div className="text-sm" style={{ color: 'rgba(255,255,255,.28)' }}>
+            <div className="text-sm mb-4" style={{ color: 'rgba(255,255,255,.28)' }}>
               Enroll your first client to get started.
             </div>
+            
+              <GlassLink href="/dashboard/trainer/enroll" variant="primary" size="md">
+              + ENROLL YOUR FIRST CLIENT
+            </GlassLink>
           </div>
         ) : (
           <div className="flex flex-col gap-3">
@@ -181,7 +164,8 @@ export default async function TrainerDashboard() {
           </div>
         )}
         <SmartAdjustments />
-      </main>
+     </div>
+      </MobileSidebarWrapper>
     </div>
   );
 }

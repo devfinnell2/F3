@@ -7,6 +7,7 @@ import { authOptions }      from '@/lib/auth/config';
 import { redirect }         from 'next/navigation';
 import TrainerSidebar       from '@/components/trainer/TrainerSidebar';
 import TrainerChat          from '@/components/trainer/TrainerChat';
+import DashboardLayout from '@/components/layout/DashboardLayout';
 
 export default async function TrainerMessagesPage() {
   const session = await getServerSession(authOptions);
@@ -27,14 +28,13 @@ export default async function TrainerMessagesPage() {
       .slice(0, 2),
   };
 
+
+  const sidebar = (
+    <TrainerSidebar trainer={trainer} activeItem="messages" />
+  );
   return (
-    <div
-      className="flex min-h-screen"
-      style={{
-        background: 'linear-gradient(135deg,#060612 0%,#0d0820 40%,#140a2e 70%,#0a0a1a 100%)',
-      }}
-    >
-      <TrainerSidebar trainer={trainer} activeItem="messages" />
+    <DashboardLayout sidebar={sidebar} accentColor="#a855f7">
+      
 
       <main
         className="flex-1 overflow-hidden"
@@ -42,6 +42,6 @@ export default async function TrainerMessagesPage() {
       >
         <TrainerChat myId={session.user.id} />
       </main>
-    </div>
+    </DashboardLayout>
   );
 }

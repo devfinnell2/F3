@@ -12,6 +12,7 @@ import WorkoutModel          from '@/lib/db/models/Workout';
 import MealPlanModel         from '@/lib/db/models/MealPlan';
 import TrainerSidebar        from '@/components/trainer/TrainerSidebar';
 import ClientPhotos          from '@/components/trainer/ClientPhotos';
+import DashboardLayout from '@/components/layout/DashboardLayout';
 
 interface PageProps {
   params: Promise<{ clientId: string }>;
@@ -68,14 +69,13 @@ export default async function ClientProfilePage({ params }: PageProps) {
   const avatarInitials = (clientUser.avatarInitials as string)
     ?? clientUser.name.slice(0, 2).toUpperCase();
 
+
+  const sidebar = (
+    <TrainerSidebar trainer={trainer} activeItem="clients" />
+  );
   return (
-    <div
-      className="flex min-h-screen"
-      style={{
-        background: 'linear-gradient(135deg,#060612 0%,#0d0820 40%,#140a2e 70%,#0a0a1a 100%)',
-      }}
-    >
-      <TrainerSidebar trainer={trainer} activeItem="clients" />
+    <DashboardLayout sidebar={sidebar} accentColor="#a855f7">
+      
 
       <main
         className="flex-1 p-6 overflow-y-auto"
@@ -322,6 +322,6 @@ export default async function ClientProfilePage({ params }: PageProps) {
 
         </div>
       </main>
-    </div>
+    </DashboardLayout>
   );
 }

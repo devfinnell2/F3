@@ -11,6 +11,7 @@ import ClientProfileModel    from '@/lib/db/models/ClientProfile';
 import MessageModel          from '@/lib/db/models/Message';
 import ClientSidebar         from '@/components/client/ClientSidebar';
 import ClientChat            from '@/components/client/ClientChat';
+import DashboardLayout from '@/components/layout/DashboardLayout';
 
 export default async function ClientMessagesPage() {
   const session = await getServerSession(authOptions);
@@ -56,19 +57,18 @@ export default async function ClientMessagesPage() {
       }
     : null;
 
-  return (
-    <div
-      className="flex min-h-screen"
-      style={{
-        background: 'linear-gradient(135deg,#060612 0%,#0d0820 40%,#140a2e 70%,#0a0a1a 100%)',
-      }}
-    >
-      <ClientSidebar
+
+  const sidebar = (
+    <ClientSidebar
         client={clientData}
         trainer={trainerData}
         activeItem="messages"
         unreadCount={unreadCount}
       />
+  );
+  return (
+    <DashboardLayout sidebar={sidebar} accentColor="#00ffc8">
+      
 
       <main
         className="flex-1 overflow-hidden"
@@ -76,6 +76,6 @@ export default async function ClientMessagesPage() {
       >
         <ClientChat myId={session.user.id} />
       </main>
-    </div>
+    </DashboardLayout>
   );
 }

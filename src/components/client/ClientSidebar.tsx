@@ -4,6 +4,7 @@
 
 'use client';
 
+import LiquidGlassButton from '@/components/ui/LiquidGlassButton';
 import UnreadBadge from '@/components/shared/UnreadBadge';
 import Link from 'next/link';
 import { signOut } from 'next-auth/react';
@@ -224,19 +225,14 @@ export default function ClientSidebar({
         />
 
         {/* Sign out */}
-        <button
+       <LiquidGlassButton
           onClick={() => signOut({ callbackUrl: '/login' })}
-          className="w-full text-left px-3 py-2 text-sm tracking-wide uppercase rounded"
-          style={{
-            color: 'rgba(244,114,182,.55)',
-            fontFamily: 'Courier New, monospace',
-            background: 'transparent',
-            border: 'none',
-            cursor: 'pointer',
-          }}
+          variant="admin"
+          size="sm"
+          fullWidth
         >
           ← SIGN OUT
-        </button>
+        </LiquidGlassButton>
         <div className="mt-3 flex justify-end pr-1">
           <NotificationBell accentColor="#00ffc8" />
         </div>

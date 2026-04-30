@@ -9,6 +9,7 @@ import { connectDB }         from '@/lib/db/mongoose';
 import UserModel             from '@/lib/db/models/User';
 import TrainerSidebar        from '@/components/trainer/TrainerSidebar';
 import AICoach               from '@/components/trainer/AICoach';
+import DashboardLayout from '@/components/layout/DashboardLayout';
 
 export default async function AICoachPage() {
   const session = await getServerSession(authOptions);
@@ -45,14 +46,13 @@ export default async function AICoachPage() {
     avatarInitials: c.avatarInitials ?? '??',
   }));
 
+
+  const sidebar = (
+    <TrainerSidebar trainer={trainer} activeItem="ai" />
+  );
   return (
-    <div
-      className="flex min-h-screen"
-      style={{
-        background: 'linear-gradient(135deg,#060612 0%,#0d0820 40%,#140a2e 70%,#0a0a1a 100%)',
-      }}
-    >
-      <TrainerSidebar trainer={trainer} activeItem="ai" />
+    <DashboardLayout sidebar={sidebar} accentColor="#a855f7">
+      
 
       <main
         className="flex-1 flex flex-col overflow-hidden"
@@ -63,6 +63,6 @@ export default async function AICoachPage() {
           trainerTier={session.user.tier ?? 'pro'}
         />
       </main>
-    </div>
+    </DashboardLayout>
   );
 }

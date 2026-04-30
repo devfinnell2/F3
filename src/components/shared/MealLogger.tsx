@@ -405,12 +405,21 @@ async function handleLog() {
             border:     '1px solid rgba(0,255,200,.2)',
           }}
         >
-          <div
-            className="text-xs tracking-widest mb-2"
-            style={{ color: 'rgba(0,255,200,.5)' }}
-          >
-            🤖 F3 AI — MACRO CORRECTION
-          </div>
+        <div
+          className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
+          style={{ background: 'rgba(0,255,200,.08)', border: '1px solid rgba(0,255,200,.25)' }}
+        >
+          <svg width="26" height="26" viewBox="0 0 40 40" fill="none">
+            <polygon points="20,3 34,11 34,29 20,37 6,29 6,11" stroke="#a855f7" strokeWidth="1" fill="rgba(168,85,247,.05)"/>
+            <circle cx="20" cy="20" r="7"  stroke="#00ffc8" strokeWidth="1" fill="none"/>
+            <circle cx="20" cy="20" r="3"  stroke="#c084fc" strokeWidth="1" fill="rgba(168,85,247,.15)"/>
+            <circle cx="20" cy="20" r="1"  fill="#00ffc8"/>
+            <line x1="20" y1="8"  x2="20" y2="12" stroke="#00ffc8" strokeWidth="1"/>
+            <line x1="20" y1="28" x2="20" y2="32" stroke="#00ffc8" strokeWidth="1"/>
+            <line x1="8"  y1="20" x2="12" y2="20" stroke="#00ffc8" strokeWidth="1"/>
+            <line x1="28" y1="20" x2="32" y2="20" stroke="#00ffc8" strokeWidth="1"/>
+          </svg>
+        </div>
           <div
             className="text-sm leading-relaxed whitespace-pre-wrap"
             style={{ color: '#a7f3d0' }}

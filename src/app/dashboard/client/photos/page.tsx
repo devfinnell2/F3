@@ -10,6 +10,7 @@ import ClientProfileModel    from '@/lib/db/models/ClientProfile';
 import MessageModel          from '@/lib/db/models/Message';
 import ClientSidebar         from '@/components/client/ClientSidebar';
 import PhotoUploader         from '@/components/client/PhotoUploader';
+import DashboardLayout from '@/components/layout/DashboardLayout';
 
 export default async function ClientPhotosPage() {
   const session = await getServerSession(authOptions);
@@ -55,19 +56,18 @@ export default async function ClientPhotosPage() {
     afterDate:  (profile as any)?.afterPhotoDate  ?? null,
   };
 
-  return (
-    <div
-      className="flex min-h-screen"
-      style={{
-        background: 'linear-gradient(135deg,#060612 0%,#0d0820 40%,#140a2e 70%,#0a0a1a 100%)',
-      }}
-    >
-      <ClientSidebar
+
+  const sidebar = (
+    <ClientSidebar
         client={clientData}
         trainer={trainerData}
         activeItem="photos"
         unreadCount={unreadCount}
       />
+  );
+  return (
+    <DashboardLayout sidebar={sidebar} accentColor="#00ffc8">
+      
       <main
         className="flex-1 p-6 overflow-y-auto"
         style={{ color: '#e0d8ff', fontFamily: 'Courier New, monospace' }}
@@ -83,6 +83,6 @@ export default async function ClientPhotosPage() {
         </p>
         <PhotoUploader photos={photos} />
       </main>
-    </div>
+    </DashboardLayout>
   );
 }

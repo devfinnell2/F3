@@ -7,6 +7,7 @@ import ClientProfileModel    from '@/lib/db/models/ClientProfile';
 import WorkoutModel          from '@/lib/db/models/Workout';
 import TrainerSidebar        from '@/components/trainer/TrainerSidebar';
 import TodaysMeals from '@/components/shared/TodaysMeals';
+import DashboardLayout from '@/components/layout/DashboardLayout';
 
 const CERT_COLORS: Record<string, string> = {
   'ISSA CPT':           '#a855f7',
@@ -61,14 +62,13 @@ export default async function TrainerStatusPage() {
 
   const isVerified = (user as any)?.issaVerified ?? false;
 
+
+  const sidebar = (
+    <TrainerSidebar trainer={trainer} activeItem="status" />
+  );
   return (
-    <div
-      className="flex min-h-screen"
-      style={{
-        background: 'linear-gradient(135deg,#060612 0%,#0d0820 40%,#140a2e 70%,#0a0a1a 100%)',
-      }}
-    >
-      <TrainerSidebar trainer={trainer} activeItem="status" />
+    <DashboardLayout sidebar={sidebar} accentColor="#a855f7">
+      
 
       <main
         className="flex-1 p-6 overflow-y-auto"
@@ -344,6 +344,6 @@ export default async function TrainerStatusPage() {
 
         </div>
       </main>
-    </div>
+    </DashboardLayout>
   );
 }
